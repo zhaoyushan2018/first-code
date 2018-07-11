@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace类的完全限定名 只要保证唯一就行 -->
+<mapper namespace="com.xiaoshan.mapper.UserMapper">
+
+    <insert id="save" parameterType="com.xiaoshan.entity.User" useGeneratedKeys="true" keyProperty="id">
+        insert into t_user(username, password)
+        values (#{username}, #{password})
+    </insert>
+
+    <select id="findUserById" resultType="com.xiaoshan.entity.User">
+        select * from t_user
+        where id = #{id}
+    </select>
+
+    <select id="findByPage" resultType="com.xiaoshan.entity.User">
+        select * from t_user
+        limit
+        #{start},#{pageSize}
+    </select>
+    
+    <select id="findPageByMap" resultType="com.xiaoshan.entity.User" parameterType="map">
+        select * from t_user
+        limit
+        #{start},#{pageSize}
+    </select>
+
+    <select id="findAll" resultType="com.xiaoshan.entity.User">
+        select * from t_user
+    </select>
+
+    <!-- 基本类型不需要写参数类型 -->
+    <delete id="deleteById">
+        delete from t_user
+        where id = #{id}
+    </delete>
+
+    <update id="update" parameterType="com.xiaoshan.entity.User">
+        update t_user
+        set username = #{username},
+        password = #{password}
+        where id = #{id}
+    </update>
+
+    <!--<update id="updateById" parameterType="com.xiaoshan.entity.User">
+        update t_user
+        set username = #{username},
+        password = #{password}
+        where id = #{id}
+    </update>-->
+
+</mapper>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xiaoshan.mapper.UserOneMapper">
+
+    <select id="findMovieByUserId" parameterType="int" resultType="com.xiaoshan.entity.User">
+           SELECT
+                t_user.id,
+                t_user.username,
+                t_user.password,
+                t_movie.id,
+                t_movie.movie_name,
+                t_movie.director_name
+            FROM
+                t_user
+            INNER JOIN t_movie ON t_user.id = t_movie.user_id
+            WHERE
+                t_user.id = #{id}
+    </select>
+
+</mapper>

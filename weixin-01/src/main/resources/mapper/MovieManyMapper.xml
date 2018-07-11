@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xiaoshan.mapper.MovieManyMapper">
+
+    <resultMap id="baseMap" type="com.xiaoshan.entity.Movie">
+        <id column="id" property="id"/>
+        <result column="movie_name" property="movieName"/>
+        <result column="director_name" property="directorName"/>
+        <result column="user_id" property="userId"/>
+    </resultMap>
+
+    <resultMap id="movieTypeUserMap" type="com.xiaoshan.entity.Movie" extends="baseMap">
+
+        <association property="user" javaType="com.xiaoshan.entity.User">
+            <id column="user_id" property="id"/>
+            <result column="username" property="username"/>
+            <result column="password" property="password"/>
+        </association>
+
+        <collection property="typeList" ofType="com.xiaoshan.entity.Type">
+            <id column="type_id" property="id"/>
+            <result column="type_name" property="typeName"/>
+        </collection>
+
+    </resultMap>
+
+   <!-- <select id="findUserTypeByMovieId" resultMap="movieTypeUserMap">
+        select * from
+        movie m inner join user u on m.user_id = u.id
+        inner join movieType mt on m.id = mt.movie_id
+        inner join type t on mt.type_id = t.id
+        where m.id = #{id}
+    </select>-->
+
+    <select id="findUserTypeByMovieId" resultMap="movieTypeUserMap">
+        select
+				m.id,m.movie_name,m.director_name,m.user_id,
+				u.id as 'user_id',u.username,u.password,
+				t.id as 'type_id',t.type_name
+				from
+        movie m inner join user u on m.user_id = u.id
+        inner join movieType mt on m.id = mt.movie_id
+        inner join type t on mt.type_id = t.id
+        where m.id = #{id}
+    </select>
+
+    <insert id="addTypeBatch" parameterType="list">
+        insert into type (type_name) values
+        <foreach collection="typeList" separator="," item="type">
+            (#{type.typeName})
+        </foreach>
+    </insert>
+    
+    
+    <!--    - - - - - - - -  - - - -  - - - - - - - -  - - - -  - - - - - - - -  - - - - - - - - - - - -  - - - -      -->
+    <!-- 两个相同（注释和未注释）  -->
+    <!-- <select id="findUserByMovieId" resultType="com.xiaoshan.entity.Moviide" parameterType="int">
+        select
+            movie.id,
+            movie.movie_name,
+            movie.director_name,
+            movie.user_id,
+            user.username as 'user.username',
+            user.password as 'user.password'
+        from
+            movie
+        inner join
+            user
+        on
+            movie.user_id = user.id
+        where
+            movie.id = #{id}
+    </select>-->
+
+
+    
+    <resultMap id="movieUserMap" type="com.xiaoshan.entity.Movie" extends="baseMap" >
+        <association property="user" javaType="com.xiaoshan.entity.User">
+            <id column="id" property="id"/>
+            <result column="username" property="username"/>
+            <result column="password" property="password"/>
+        </association>
+    </resultMap>
+
+    <select id="findUserByMovieId" resultMap="movieUserMap" parameterType="int">
+        select
+	        movie.id,movie.movie_name,movie.director_name,movie.user_id,user.username,user.password
+        from
+            movie
+        inner join
+            user
+        on
+            movie.user_id = user.id
+        where
+            movie.id = #{id}
+    </select>
+    <!--    - - - - - - - -  - - - -  - - - - - - - -  - - - -  - - - - - - - -  - - - - - - - - - - - -  - - - -      -->
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--    - - - - - - - -  - - - -  - - - - - - - -  - - - -  - - - - - - - -  - - - - - - - - - - - -  - - - -      -->
+    <!--<resultMap id="baseMap" type="com.xiaoshan.entity.Movie">
+        <id column="id" property="id"/>
+        <result column="movie_name" property="movieName"/>
+        <result column="director_name" property="directorName"/>
+        <result column="user_id" property="userId"/>
+    </resultMap>-->
+
+   <!-- <resultMap id="movieMap" type="com.xiaoshan.entity.Movie" extends="baseMap">
+
+        <association property="user" javaType="com.xiaoshan.entity.User">
+            <id column="user_id" property="id"/>
+            <result column="username" property="username"/>
+            <result column="password" property="password"/>
+        </association>
+
+    </resultMap>-->
+
+    <!--<select id="findUserByMovieId" resultMap="movieMap" parameterType="int">
+        select
+            movie.id,
+            movie_name,
+            director_name,
+            user_id,
+            username,
+            password
+        from
+            movie
+        inner join user
+        on
+            movie.user_id = user.id
+        where
+            movie.id = #{id}
+    </select>-->
+
+    <!--<select id="findUserByMovieId" parameterType="int" resultType="com.xiaoshan.entity.Movie">
+           select
+                movie.id,
+                movie.movie_name,
+                movie.director_name,
+                movie.user_id,
+                user.id as 'user.id',
+                user.username as 'user.username',
+                user.password as 'user.password'
+            from
+                movie
+            inner join user
+            on
+                movie.user_id = user.id
+            where
+                movie.id = #{id}
+    </select>-->
+
+
+    <!--<select id="findUserById" parameterType="int" resultType="com.xiaoshan.entity.Movie">
+
+        SELECT
+            movie.id,
+            movie.movie_name,
+            movie.director_name,
+            user.id as 'user.id',
+            user.username as 'user.username'
+        FROM
+            user
+        INNER JOIN movie ON t_user.id = movie.user_id
+        WHERE
+            movie.id = #{id}
+
+
+       /* SELECT
+            t_user.id as 'user.id',
+            t_user.username as 'user.username',
+            t_movie.id as movieId,
+            t_movie.movie_name,
+            t_movie.director_name
+        FROM
+            t_user
+        INNER JOIN t_movie ON t_user.id = t_movie.user_id
+        WHERE
+            t_movie.id = #{id}*/
+    </select>-->
+    
+    <!--<resultMap id="movieWithTypeMap" type="com.xiaoshan.entity.Movie" extends="movieMap">
+        <collection property="typeList" ofType="com.xiaoshan.entity.Type">
+            <id column="id" property="id"/>
+            <result column="type_name" property="typeName"/>
+        </collection>
+
+    </resultMap>-->
+
+    <!--<resultMap id="movieUserTypeAndMovieType" type="com.xiaoshan.entity.Movie" extends="movieWithTypeMap">
+        <collection property=""
+    </resultMap>-->
+    
+
+    <!--<select id="findTypeByMovieId" resultMap="movieWithTypeMap">
+
+    </select>-->
+
+
+</mapper>
