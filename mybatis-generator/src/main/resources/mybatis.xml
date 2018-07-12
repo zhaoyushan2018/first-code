@@ -1,22 +1,19 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE configuration
         PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-config.dtd">
-        <!-- 上面是dtd验证 -->
+        "http://mybatis.org/dtd/mybatis-3-config.dtd"><!-- dtd验证 -->
 <configuration>
-    <!-- 映射时下划线转换为驼峰命名法 -->
     <settings>
+        <!-- 将数据库中下划线风格的命名映射为java中驼峰命名风格 -->
         <setting name="mapUnderscoreToCamelCase" value="true"/>
     </settings>
 
+    <!-- 给java类的完全限定名创建别名 -->
     <!--<typeAliases>
-        &lt;!&ndash;  其它地方用这个包下的实体类时,可以直接写类名(首字母可以大、小写){自动扫描}  &ndash;&gt;
-        <package name="com.xiaoshan.entity"/>
+        <typeAlias type="完全限定名" alias="别名"/>
     </typeAliases>-->
-    <typeAliases>
-       <typeAlias type="com.xiaoshan.entity.User" alias="user"/>
-    </typeAliases>
 
+    <!--  default默认选择哪个数据库 (可以配置多个environment) -->
     <environments default="dev">
         <environment id="dev">
             <transactionManager type="JDBC"/>
@@ -30,13 +27,10 @@
         </environment>
     </environments>
 
-    <!-- 加载这个xml时会把配置里的xml加载了 -->
+    <!-- 加载主配置文件时会把 mappers里面的xml加载了-->
     <mappers>
         <!-- 配置mapper文件的classpath加载路径 -->
-        <mapper resource="mapper/UserMapper.xml"/>
-        <mapper resource="mapper/MovieManyMapper.xml"/>
-        <mapper resource="mapper/UserOneMapper.xml"/>
-        <mapper resource="mapper/MovieMapper.xml"/>
+        <mapper resource="mapper/movieMapper.xml"/>
     </mappers>
 
 </configuration>

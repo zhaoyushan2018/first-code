@@ -64,10 +64,13 @@ public class MovieMapperTestCase {
         for (Movie movie : movieList){
             logger.debug("movie:{}", movie);
         }
-
     }
 
-
+    @Test
+    public void testFindMovieById(){
+        Movie movie = movieMapper.findMovieById(15);
+        logger.debug("movie:{}", movie);
+    }
 
 
 

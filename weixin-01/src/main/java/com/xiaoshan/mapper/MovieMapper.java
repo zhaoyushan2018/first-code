@@ -36,7 +36,12 @@ public interface MovieMapper {
      */
     List<Movie> findByParam(Map<String, Object> queryKeys);
 
-
+    /**
+     * 根据id查询movie对象
+     * @param id
+     * @return
+     */
+    Movie findMovieById(Integer id);
 
 
 

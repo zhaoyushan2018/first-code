@@ -1,12 +1,13 @@
 package com.xiaoshan.entity;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * @author YushanZhao
  * @Date:2018/7/10
  */
-public class Movie {
+public class Movie implements Serializable {
 
     private Integer id;
     private String movieName;
