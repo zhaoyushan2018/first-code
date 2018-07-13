@@ -3,6 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-config.dtd"><!-- dtd验证 -->
 <configuration>
+
     <settings>
         <!-- 将数据库中下划线风格的命名映射为java中驼峰命名风格 -->
         <setting name="mapUnderscoreToCamelCase" value="true"/>

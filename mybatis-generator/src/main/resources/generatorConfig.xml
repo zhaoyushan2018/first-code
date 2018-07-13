@@ -15,7 +15,7 @@
     -->
     <context id="myConfig" targetRuntime="MyBatis3">
 
-        <!-- 去掉注释 -->
+        <!-- 去掉注释(去掉全部[自动生成的]注释)-->
         <commentGenerator>
             <property name="suppressAllComments" value="true"/>
             <property name="suppressDate" value="true"/>
@@ -39,6 +39,7 @@
         <javaClientGenerator type="XMLMAPPER" targetPackage="com.xiaoshan.mapper"
                              targetProject="src/main/java"/>
 
+        <!-- 数据库表明(要自动生成实体类、Mapper接口和XML文件的表明) -->
         <table tableName="movieone" />
 
     </context>

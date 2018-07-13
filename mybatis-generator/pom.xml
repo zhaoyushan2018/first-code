@@ -8,6 +8,8 @@
     <artifactId>mybatis-generator</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+    <!-- war代表打包的是war文件，意思就是说是一个web程序 -->
+    <!-- jar打包成jar文件 -->
     <packaging>jar</packaging>
 
     <dependencies>
@@ -19,28 +21,28 @@
             <version>4.12</version>
         </dependency>
 
-        <!-- MyBatis -->
+        <!-- mybatis -->
         <dependency>
             <groupId>org.mybatis</groupId>
             <artifactId>mybatis</artifactId>
             <version>3.4.5</version>
         </dependency>
 
-        <!-- mysql-connector -->
+        <!-- mysql-connector-java -->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>5.1.40</version>
         </dependency>
 
-        <!-- slf4j -->
+        <!-- slf4j-api -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>1.7.25</version>
         </dependency>
 
-        <!-- log4j -->
+        <!-- slf4j-log4j12 -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
@@ -72,6 +74,7 @@
             </plugin>
 
             <!-- MBG 插件-->
+            <!-- 根据配置文件的规则，自动生成实体类、Mapper接口和XML文件 -->
             <plugin>
                 <groupId>org.mybatis.generator</groupId>
                 <artifactId>mybatis-generator-maven-plugin</artifactId>
