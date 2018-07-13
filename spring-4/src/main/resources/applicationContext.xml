@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!--(下面一行属性) 默认为单例scope="singleton" --><!-- 非单例scope="prototype" -->
+    <bean id="movieDao" class="com.xiaoshan.dao.MovieDao" lazy-init="true" init-method="init" destroy-method="destroy"/>
+    <!--<alias name="movieDao" alias="movieDao2"/>--> <!-- 别名 别名和原来的都能用 -->
+    <!-- name属性在容器中为bean命名，可以使用逗号隔开命名多个名称 -->
+    <!--<bean name="movieDao,movieDao2" class="com.xiaoshan.dao.MovieDao"/>-->
+
+</beans>
