@@ -13,7 +13,7 @@
             MyBatis3Simple ： 生成简单的CRUD
             MyBatis3：生成带Example的CRUD语句
     -->
-    <context id="myConfig" targetRuntime="MyBatis3Simple">
+    <context id="myConfig" targetRuntime="MyBatis3">
 
         <!-- 去掉注释 -->
         <commentGenerator>
@@ -26,10 +26,10 @@
                         connectionURL="jdbc:mysql:///test"
                         userId="root" password="root"/>
 
-        <!--entity-->
+        <!--entity实体类-->
         <javaModelGenerator targetPackage="com.xiaoshan.entity" targetProject="src/main/java"/>
 
-        <!-- xml -->
+        <!-- xml映射文件 -->
         <sqlMapGenerator targetPackage="mapper" targetProject="src/main/resources"/>
 
         <!-- mapper接口
@@ -39,7 +39,7 @@
         <javaClientGenerator type="XMLMAPPER" targetPackage="com.xiaoshan.mapper"
                              targetProject="src/main/java"/>
 
-        <table tableName="movie" />
+        <table tableName="movieone" />
 
     </context>
 
