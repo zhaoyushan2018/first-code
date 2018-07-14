@@ -1,9 +1,144 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd">
 
+
+
+    <bean id="studentService" class="com.xiaoshan.service.StudentService" autowire="byType"/>
+    <bean id="studentDao" class="com.xiaoshan.dao.StudentDao"/>
+
+    <!--   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -   -->
+
+    <!--
+         bean里面autowire这个属性的值为：
+        byName 根据需要注入的属性名在容器内寻找名称相同的Bean，如果找到就注入，找不到就不注入
+        byType 根据需要注入的属性类型在容器找类型相同的Bean，如果找到就注入，找不到就不注入，如果找到多个类型相同的Bean，则抛出异常
+        constructor 类似byType注入，但是使用在构造方法之上
+        no 默认值，不进行自动注入
+    -->
+    <!--<bean id="studentService" class="com.xiaoshan.service.StudentService" autowire="byName"/>
+    <bean id="studentDao" class="com.xiaoshan.dao.StudentDao"/>-->
+
+    <!--   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -   -->
+
+    <!--<bean id="studentService" class="com.xiaoshan.service.StudentService">-->
+        <!--  type:构造方法参数的类型. ref:注入bean在spring容器中的id -->
+       <!-- <constructor-arg type="com.xiaoshan.dao.StudentDao" ref="studentDao"/>
+    </bean>
+
+    <bean id="studentDao" class="com.xiaoshan.dao.StudentDao"/>-->
+
+
+    <!--   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -   -->
+
+    <!--<bean id="studentService" class="com.xiaoshan.service.StudentService">-->
+       <!-- index:构造方法参数的位置索引.  ref:注入bean在spring容器中的id-->
+      <!--  <constructor-arg index="0" ref="studentDao"/>
+    </bean>
+
+    <bean id="studentDao" class="com.xiaoshan.dao.StudentDao"/>-->
+
+
+    <!--   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -   -->
+   <!-- <bean id="studentService" class="com.xiaoshan.service.StudentService">-->
+        <!--
+            name:构造方法参数的名称
+            ref:注入bean在spring容器中的id
+         -->
+      <!--  <constructor-arg name="studentDao" ref="studentDao"/>
+    </bean>
+
+    <bean id="studentDao" class="com.xiaoshan.dao.StudentDao"/>-->
+
+    <!--   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -   -->
+
+    <bean id="baseService" class="com.xiaoshan.service.BaseService">
+        <property name="id" value="521"/>
+        <property name="name" value="huanhuan"/>
+        <property name="score" value="88.8"/>
+        <property name="stringList">
+            <list>
+                <value>aaa</value>
+                <value>bbb</value>
+                <value>ccc</value>
+            </list>
+        </property>
+        <property name="numSets">
+            <set>
+                <value>111</value>
+                <value>222</value>
+                <value>333</value>
+            </set>
+        </property>
+        <property name="maps">
+            <map>
+                <entry key="id" value="1"/>
+                <entry key="name" value="xiaoli"/>
+                <entry key="address" value="jiaozuo"/>
+            </map>
+        </property>
+        <property name="properties">
+            <props>
+                <prop key="driver">com.mysql.jdbc.Driver</prop>
+                <prop key="username">root</prop>
+            </props>
+        </property>
+    </bean>
+
+
+
+    <!--   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -   -->
+        <!-- 把StudentDao注入到service里面 -->
+        <!-- <bean id="studentService" class="com.xiaoshan.service.StudentService" p:studentDao-ref="studentDao"/>
+         <bean id="studentDao" class="com.xiaoshan.dao.StudentDao"/>-->
+
+    <!--   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -   -->
+
+        <!-- <bean id="studentService" class="com.xiaoshan.service.StudentService">-->
+        <!--
+         name:被注入的属性的set方法名去掉set，首字母小写之后的名称（只不过恰好和属性相同）
+         ref:spring容器中注入对象的id
+         (把下面一行变三行)
+             -->
+         <!--<property name="studentDao">
+             <bean class="com.xiaoshan.dao.StudentDao"/>
+         </property>
+         </bean>-->
+
+
+
+
+    <!--   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -   -->
+
+       <!-- <bean id="studentService" class="com.xiaoshan.service.StudentService">-->
+            <!--
+             name:被注入的属性的set方法名去掉set，首字母小写之后的名称（只不过恰好和属性相同）
+             ref:spring容器中注入对象的id
+             (把下面一行变三行)
+                 -->
+           <!-- <property name="studentDao">
+                <ref bean="studentDao"/>
+            </property>
+
+        </bean>
+        <bean id="studentDao" class="com.xiaoshan.dao.StudentDao"/>-->
+
+
+
+    <!--   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -   -->
+
+    <!--<bean id="studentService" class="com.xiaoshan.service.StudentService">-->
+        <!--
+         name:被注入的属性的set方法名去掉set，首字母小写之后的名称（只不过恰好和属性相同）
+         ref:spring容器中注入对象的id
+         -->
+        <!--<property name="studentDao" ref="studentDao"/>
+    </bean>
+    <bean id="studentDao" class="com.xiaoshan.dao.StudentDao"/>-->
+
+    <!--   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -   -->
     <!--(下面一行属性) 默认为单例scope="singleton" --><!-- 非单例scope="prototype" -->
     <bean id="movieDao" class="com.xiaoshan.dao.MovieDao" lazy-init="true" init-method="init" destroy-method="destroy"/>
     <!--<alias name="movieDao" alias="movieDao2"/>--> <!-- 别名 别名和原来的都能用 -->
