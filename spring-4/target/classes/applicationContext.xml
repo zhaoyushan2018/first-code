@@ -11,7 +11,13 @@
 
     <!--   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -   -->
 
-    <!-- byName 根据需要注入的属性名在容器内寻找名称相同的Bean，如果找到就注入，找不到就不注入 -->
+    <!--
+         bean里面autowire这个属性的值为：
+        byName 根据需要注入的属性名在容器内寻找名称相同的Bean，如果找到就注入，找不到就不注入
+        byType 根据需要注入的属性类型在容器找类型相同的Bean，如果找到就注入，找不到就不注入，如果找到多个类型相同的Bean，则抛出异常
+        constructor 类似byType注入，但是使用在构造方法之上
+        no 默认值，不进行自动注入
+    -->
     <!--<bean id="studentService" class="com.xiaoshan.service.StudentService" autowire="byName"/>
     <bean id="studentDao" class="com.xiaoshan.dao.StudentDao"/>-->
 
