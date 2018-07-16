@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <!-- 将通知类放入spring容器 -->
+    <bean id="aopAspect" class="com.xiaoshan.aop.AopAspect"/>
+
+    <bean id="dell" class="com.xiaoshan.prox.Dell"/>
+
+    <!-- aop配置 -->
+    <aop:config>
+        <!-- 配置依赖的通知类 -->
+        <aop:aspect ref="aopAspect">
+            <!-- 定义切入点:在什么类的什么方法上添加功能 -->
+            <aop:pointcut id="myPoint" expression="execution(* com.xiaoshan.prox..*(..))"/>
+            <!-- 加入通知  method:业务逻辑  pointcut-ref:加在什么地方 -->
+            <!-- 前置通知 -->
+            <aop:before method="beforeAdvice" pointcut-ref="myPoint"/>
+            <!-- 后置通知 -->
+            <!--无参数<aop:after-returning method="afterAdvice" pointcut-ref="myPoint"/>-->
+            <aop:after-returning method="afterAdvice" pointcut-ref="myPoint" returning="result"/>
+            <!-- 异常通知 -->
+            <!--<aop:after-throwing method="exceptionAdvice" pointcut-ref="myPoint"/>-->
+            <aop:after-throwing method="exceptionAdvice" pointcut-ref="myPoint" throwing="ex"/>
+            <!-- 最终通知 -->
+            <aop:after method="finallyAdvice" pointcut-ref="myPoint"/>
+
+            <!-- 环绕通知 -->
+           <!-- <aop:around method="aroundAdvice" pointcut-ref="myPoint"/>-->
+        </aop:aspect>
+    </aop:config>
+
+</beans>

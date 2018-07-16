@@ -10,4 +10,9 @@ public class Lenovo implements Sale {
     public void salePc() {
         System.out.println("Lenovo联想厂商销售电脑一台");
     }
+
+    @Override
+    public int salePrice() {
+        return 0;
+    }
 }

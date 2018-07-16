@@ -7,5 +7,6 @@ package com.xiaoshan.prox;
 public interface Sale {
 
     void salePc();
+    int salePrice();
 
 }

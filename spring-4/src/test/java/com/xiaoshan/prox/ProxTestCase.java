@@ -1,4 +1,4 @@
-package com.xiaoshan.com.xiaoshan.prox;
+package com.xiaoshan.prox;
 
 import com.xiaoshan.prox.Dell;
 import com.xiaoshan.prox.Lenovo;

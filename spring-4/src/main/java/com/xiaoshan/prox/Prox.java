@@ -19,4 +19,9 @@ public class Prox implements Sale {
         sale.salePc();
         System.out.println("----------------------");
     }
+
+    @Override
+    public int salePrice() {
+        return 0;
+    }
 }
