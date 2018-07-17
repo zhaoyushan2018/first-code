@@ -1,6 +1,7 @@
 package com.xiaoshan.dao;
 
 import com.xiaoshan.BaseTestCase;
+import org.apache.commons.dbcp2.BasicDataSource;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 /**
@@ -20,6 +21,36 @@ public class UserDaoTestCase extends BaseTestCase {
         //UserDao userDao = (UserDao) context.getBean("userDao");
         userDao.save();
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public void testDataSource(){
+        BasicDataSource basicDataSource = new BasicDataSource();
+        basicDataSource.setDriverClassName("com.mysql.jdbc.Driver");
+        basicDataSource.setUrl("jdbc:mysql:///test");
+        basicDataSource.setUsername("root");
+        basicDataSource.setPassword("root");
+
+        System.out.println("----------------分割线----------------");
+
+        basicDataSource.setInitialSize(5);
+        basicDataSource.setMinIdle(4);
+        basicDataSource.setMaxIdle(10);
+        basicDataSource.setMaxWaitMillis(5000);//以毫秒为单位。一千毫秒等于一秒
+    }
+
 }
 
 

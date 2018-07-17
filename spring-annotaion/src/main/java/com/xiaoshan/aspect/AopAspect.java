@@ -9,8 +9,8 @@ import org.springframework.stereotype.Component;
  * @author YushanZhao
  * @Date:2018/7/16
  */
-@Component("AopAspect")
-@Aspect
+/*@Component("AopAspect")
+@Aspect*/
 public class AopAspect {
 
     @Pointcut("execution(* com.xiaoshan.service..*.*(..))")

@@ -2,8 +2,8 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
-       xmlns:aop="http://www.springframework.org/schema/aop"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+       xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
 
     <!-- 配置自动扫描的路径 -->
     <context:component-scan base-package="com.xiaoshan"/>
@@ -11,13 +11,38 @@
     <!-- 开启aop的注解 -->
     <aop:aspectj-autoproxy/>
 
-
-
-
-
     <!-- 以前学的 -->
     <!-- scope="prototype" 变成非单例模式 -->
     <!-- lazy-init="true"  变成懒加载 -->
     <!--<bean id="userService" class="com.xiaoshan.service.UserService" scope="prototype" lazy-init="true"/>-->
+
+    <!-- 用于读取config.properties配置文件 -->
+    <context:property-placeholder location="classpath:config.properties"/>
+
+    <!-- 配置数据库连接池 -->
+    <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="${jdbc.driver}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+        <!--<property name="initialSize" value="5"/>
+        <property name="minIdle" value="5"/>
+        <property name="maxIdle" value="10"/>
+        <property name="maxWaitMillis" value="5000"/>可要可不要,有默认值  -->
+    </bean>
+
+    <!-- 配置数据库工具 -->
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <!-- dataSource 第一个为去掉set首字母变小写  具体依赖的bean -->
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <!-- JDBC事务管理 -->
+    <bean id="transactionNamanger" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <!-- 基于注解的事务 -->
+    <tx:annotation-driven transaction-manager="transactionNamanger"/>
 
 </beans>
