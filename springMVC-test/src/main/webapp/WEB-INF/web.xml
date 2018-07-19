@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
+         http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+         id="WebApp_ID" version="3.1">
+
+    <!-- 配置前端中央控制器 -->
+    <servlet>
+        <servlet-name>springmvc</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <!-- servlet 启动时是第一次请求时创建实例 第二次就不创建了 -->
+        <!-- 跟随容器启动时启动起来,不用请求时了 整数越小越先启动,整数相同谁在前谁先启动-->
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>springmvc</servlet-name>
+        <!-- 在DispatcherServlet中  /  代表拦截所有请求 -->
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
+
+</web-app>
