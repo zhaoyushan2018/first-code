@@ -27,4 +27,19 @@
         <property name="suffix" value=".jsp"/>
     </bean>
 
+    <!-- 文件上传解析器 -->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="maxUploadSize" value="5242880"/>
+    </bean>
+
+    <!-- 拦截器 -->
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <!-- 拦截的路径 /** 所有请求包括子请求 -->
+            <mvc:mapping path="/**"/>
+            <!-- 拦截请求的bean -->
+            <bean class="com.xiaoshan.controller.interceptor.MyInterceptor"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
+
 </beans>
