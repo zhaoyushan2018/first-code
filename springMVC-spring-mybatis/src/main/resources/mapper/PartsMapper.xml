@@ -179,6 +179,22 @@
       <include refid="Example_Where_Clause" />
     </if>
   </select>
+  <resultMap id="partsListWithType" type="com.xiaoshan.entity.Parts" extends="BaseResultMap">
+      <!-- 一对一 -->
+      <association property="type" javaType="com.xiaoshan.entity.Type" column="type_id">
+          <id column="type_id" property="id"/>
+          <result column="type_name" property="typeName"/>
+      </association>
+  </resultMap>
+  <select id="findPageWithType" resultMap="partsListWithType">
+    SELECT
+	parts.*, type.type_name
+    FROM
+        parts,
+        type
+    WHERE
+	parts.type_id = type.id
+  </select>
   <update id="updateByExampleSelective" parameterType="map">
     update parts
     <set>

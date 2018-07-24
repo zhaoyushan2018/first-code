@@ -8,11 +8,11 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Title</title>
+    <title>错误页</title>
 </head>
 <body>
 
-    <h1>服务器繁忙,请稍后再试...</h1>
+    <h1>服务器异常,请稍后再试...</h1>
 
 </body>
 </html>

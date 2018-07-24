@@ -41,6 +41,20 @@
                 <property name="mapUnderscoreToCamelCase" value="true"/>
             </bean>
         </property>
+
+        <!-- helperDialect=mysql分页的数据库为mysql -->
+        <property name="plugins">
+            <array>
+                <bean class="com.github.pagehelper.PageInterceptor">
+                    <property name="properties">
+                        <value>
+                            helperDialect=mysql
+                        </value>
+                    </property>
+                </bean>
+            </array>
+        </property>
+
     </bean>
 
     <!-- 扫描mapper接口并动态创建实现类对象并放入spring容器 -->
