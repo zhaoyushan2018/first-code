@@ -3,6 +3,8 @@ package com.xiaoshan.mapper;
 import com.xiaoshan.entity.Parts;
 import com.xiaoshan.entity.PartsExample;
 import java.util.List;
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Param;
 
 public interface PartsMapper {
@@ -29,4 +31,6 @@ public interface PartsMapper {
     int updateByPrimaryKeySelective(Parts record);
 
     int updateByPrimaryKey(Parts record);
+
+    List<Parts> findPageByPageNoAndQeryMap(Map<String,Object> queryMap);
 }

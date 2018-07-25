@@ -6,6 +6,6 @@ package com.xiaoshan.util;
  */
 public class Constant {
 
-    public static final Integer DEFAULT_PAGE_SIZE = 8;
+    public static final Integer DEFAULT_PAGE_SIZE = 3;
 
 }

@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.xiaoshan</groupId>
-    <artifactId>springMVC-spring-mybatis</artifactId>
+    <artifactId>springMVC-spring-mybatis-1</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <!-- packing打包的类型 -->
@@ -167,7 +167,7 @@
 
     <build>
         <!-- 整合项目 -->
-        <finalName>springMVC-spring-mybatis</finalName>
+        <finalName>springMVC-spring-mybatis-1</finalName>
         <plugins>
             <!-- Tomcat插件 -->
             <plugin>
@@ -193,6 +193,5 @@
             </plugin>
         </plugins>
     </build>
-
 
 </project>

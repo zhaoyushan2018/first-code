@@ -8,19 +8,18 @@
     <servlet>
         <servlet-name>springmvc</servlet-name>
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
-        <!-- 跟随容器启动而启动,不用请求时了,整数越小越先启动,整数相同谁在前谁先启动 -->
+        <!-- 跟随容器启动而启动 -->
         <load-on-startup>1</load-on-startup>
     </servlet>
     
     <servlet-mapping>
         <servlet-name>springmvc</servlet-name>
-        <!-- 在DispatcherServlet中 / 代表拦截所有 -->
+        <!-- 在DispatcherServlet中/ 代表拦截所有 -->
         <url-pattern>/</url-pattern>
     </servlet-mapping>
 
+
     <!-- 字符集过滤器 -->
-    <!-- encoding：指定我们需要的编码格式，比如UTF-8 -->
-    <!-- forceEncoding：当该参数设为true时，则可以覆盖已经存在的request编码，同时response也会被设置成相应的编码方式 -->
     <filter>
         <filter-name>encodingFilter</filter-name>
         <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
@@ -33,22 +32,10 @@
             <param-value>true</param-value>
         </init-param>
     </filter>
-    
+
     <filter-mapping>
         <filter-name>encodingFilter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
-
-    <!-- 容器启动的时候把mapper配置文件读取了 -->
-    <!-- spring容器随着tomcat的启动而启动,随着tomcat的销毁而销毁 -->
-    <!-- 监听器  (监听容器的启动和销毁)-->
-    <listener>
-        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
-    </listener>
-
-    <context-param>
-        <param-name>contextConfigLocation</param-name>
-        <param-value>classpath:spring.xml</param-value><!-- spring.xml随着tomcat的启动而启动起来 -->
-    </context-param>
 
 </web-app>

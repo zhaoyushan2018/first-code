@@ -118,7 +118,8 @@
       #{inPrice,jdbcType=DECIMAL}, #{salePrice,jdbcType=DECIMAL}, #{inventory,jdbcType=INTEGER}, 
       #{typeId,jdbcType=INTEGER}, #{address,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.xiaoshan.entity.Parts">
+    <!-- 返回主键值useGeneratedKeys="true" keyProperty="id" -->
+  <insert id="insertSelective" parameterType="com.xiaoshan.entity.Parts" useGeneratedKeys="true" keyProperty="id">
     insert into parts
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -195,7 +196,24 @@
     WHERE
 	parts.type_id = type.id
   </select>
-  <update id="updateByExampleSelective" parameterType="map">
+
+    <select id="findPageByPageNoAndQeryMap" resultMap="partsListWithType">
+      SELECT
+          p.*, t.type_name
+      FROM
+          parts p
+      LEFT JOIN type t ON p.type_id = t.id
+      <where>
+          <if test="partsName != null and partsName != ''">
+            and p.parts_name like concat("%",#{partsName},"%")
+          </if>
+          <if test="partsType != null and partsType != ''">
+            and p.type_id = #{partsType}
+          </if>
+      </where>
+    </select>
+
+    <update id="updateByExampleSelective" parameterType="map">
     update parts
     <set>
       <if test="record.id != null">

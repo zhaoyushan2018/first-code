@@ -34,12 +34,15 @@
             <div class="box no-border">
                 <div class="box-body">
                     <form class="form-inline pull-left">
-                        <input type="text" name="partsName" placeholder="配件名称" class="form-control">
+                        <input type="text" name="partsName" value="${param.partsName}" placeholder="配件名称" class="form-control">
+                        <input type="text" name="inventory" value="${param.inventory}" placeholder="库存量" class="form-control">
                         <select class="form-control" name="partsType" id="partsType">
                             <option value="">请选择配件类型</option>
-                            <option value="1">机油</option>
-                            <option value="2">机滤</option>
-                            <option value="3">轮胎</option>
+
+                            <c:forEach items="${typeList}" var="type">
+                                <option value="${type.id}"${param.partsType == type.id ? 'selected' : ''}>${type.typeName}</option>
+                            </c:forEach>
+
                         </select>
                         <button class="btn btn-default">搜索</button>
                     </form>
@@ -59,10 +62,11 @@
                             <th>售价</th>
                             <th>类型</th>
                             <th>产地</th>
-                            <th>#</th>
+                            <th>操作</th>
                         </tr>
                         </thead>
                         <tbody>
+
                         <c:forEach items="${page.list}" var="parts">
                             <tr>
                                 <td>${parts.partsNo}</td>
@@ -70,12 +74,16 @@
                                 <td>${parts.inventory}</td>
                                 <td>${parts.inPrice}</td>
                                 <td>${parts.salePrice}</td>
-                               <%-- <td>${parts.typeId}</td>--%>
+                                    <%-- <td>${parts.typeId}</td>--%>
                                 <td>${parts.type.typeName}</td>
                                 <td>${parts.address}</td>
-                                <td><a href="#">更新</a> <a href="">删除</a> </td>
+                                <%-- 更新就是修改福哦一跳转新页面  --%>
+                                <td><a href="/parts/${parts.id}/edit">更新</a>
+                                    <%--  href="javascript:;"失去js的意义  因为是循环(多条数据所以给class不能用id) --%>
+                                <a href="javascript:;" ref="${parts.id}" class="del">删除</a> </td>
                             </tr>
                         </c:forEach>
+
 
                         </tbody>
                     </table>
@@ -100,6 +108,20 @@
 <%@ include file="../include/js.jsp" %>
 <script>
     $(function(){
+        var message = "${message}";
+        if (message){
+            layer.msg(message);
+        }
+
+        $(".del").click(function(){
+            //id等于当前对象的ref的值
+            var id = $(this).attr("ref");
+            //layer.alert(id + "111")
+            layer.confirm("确定要删除吗?",function(){
+                window.location.href = "/parts/" + id + "/del";
+            })
+        })
+
         $("#pagination").twbsPagination({
             totalPages : ${page.pages},
             visiblePages : 5,
@@ -108,7 +130,8 @@
             prev:'上一页',
             next:'下一页',
             //从哪来回哪去,不用写路径.
-            href:"?p={{number}}"
+            // 在下一页 回显 筛选条件 后面或前面跟数据   注意空格(有影响)
+            href:"?p={{number}}&partsName=" + encodeURIComponent('${param.partsName}') + "&partsType=${param.partsType}"
         });
 
         var locale = {
