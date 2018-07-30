@@ -5,6 +5,8 @@ import com.xiaoshan.entity.Parts;
 import com.xiaoshan.entity.Type;
 import com.xiaoshan.exception.NotFoundException;
 import com.xiaoshan.service.PartsService;
+import com.xiaoshan.service.TypeService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.stereotype.Controller;
@@ -30,7 +32,25 @@ public class PartsController {
     @Autowired
     private PartsService partsService;
 
+    @Autowired
+    private TypeService typeService;
 
+
+    /*  partsTypeList-------------------------------------------------------------------------------------------------- */
+
+    @GetMapping("/partsTypeList")
+    public String partsTypeList(@RequestParam(name = "p", defaultValue = "1", required = false) Integer pageNo,
+                                Model model){
+        //List<Type> typeList = partsService.findTypeList();
+        PageInfo<Type> typePage = typeService.findTypePageList(pageNo);
+
+        model.addAttribute("typePage", typePage);
+
+        return "parts/partsTypeList";
+    }
+
+
+    /*  parts-------------------------------------------------------------------------------------------------- */
     @GetMapping("/{id:\\d+}/edit")
     public String partsEdit(@PathVariable Integer id, Model model){
         //修改时先根据id查询出来对象  返回前端页面
@@ -57,6 +77,18 @@ public class PartsController {
         return "redirect:/parts";
     }
 
+    @GetMapping("/checkPartsNo")
+    @ResponseBody
+    public String checkPartsNo(String partsNo){
+        //System.out.println(partsNo);
+        List<Parts> partsList = partsService.findPartsByPartsNo(partsNo);
+        if(partsList.isEmpty()){
+            return "true";
+        } else {
+            return "false";
+        }
+    }
+
     @GetMapping("/new")
     public String partsNew(Model model){
         //封装typeList集合返回前端
@@ -81,6 +113,7 @@ public class PartsController {
     //required:必填项  false:可填可不填
     @GetMapping
     public String list(@RequestParam(name = "p", defaultValue = "1", required = false) Integer pageNo,
+                       @RequestParam(required = false) String inventory,
                        @RequestParam(required = false) String partsName,
                        @RequestParam(required = false) Integer partsType,
                        Model model){
@@ -88,6 +121,9 @@ public class PartsController {
         Map<String, Object> queryMap = new HashMap<>();
         queryMap.put("partsName",partsName);
         queryMap.put("partsType", partsType);
+        if (StringUtils.isNumeric(inventory)){
+            queryMap.put("inventory", inventory);
+        }
 
         //PageInfo<Parts> page = partsService.findPage(pageNo);
         PageInfo<Parts> page = partsService.findPageByPageNoAndQeryMap(pageNo, queryMap);

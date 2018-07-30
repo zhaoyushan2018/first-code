@@ -7,7 +7,7 @@
 
     <!-- 自动扫描@Controller -->
     <context:component-scan base-package="com.xiaoshan.controller">
-        <!-- 只扫描带@Controller注释的 -->
+        <!-- 只扫描带@Controller注释的,并将其放入spring容器 -->
         <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
     </context:component-scan>
 
@@ -16,17 +16,21 @@
 
     <!-- 处理静态资源 -->
     <mvc:default-servlet-handler/>
+    <!--<mvc:resources mapping="/static/**" location="/static/"/>-->
 
     <!-- 视图解析器 -->
     <bean id="viewResolver" class="org.springframework.web.servlet.view.UrlBasedViewResolver">
+        <!-- 支持jstl -->
         <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
+        <!-- 视图路径的前缀 -->
         <property name="prefix" value="/WEB-INF/views/"/>
+        <!-- 视图路径的后缀 -->
         <property name="suffix" value=".jsp"/>
     </bean>
 
     <!-- 文件上传解析器 -->
     <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
-        <!-- 设置最大文件上传字节数 -->
+        <!-- 设置最大文件上传字节数 (以b为单位 1024*1024*5=5242880  5M)-->
         <property name="maxUploadSize" value="5242880"/>
     </bean>
 

@@ -33,9 +33,9 @@
 
             <div class="box no-border">
                 <div class="box-body">
-                    <form class="form-inline pull-left">
+                    <form class="form-inline pull-left" id="find">
                         <input type="text" name="partsName" value="${param.partsName}" placeholder="配件名称" class="form-control">
-                        <input type="text" name="inventory" value="${param.inventory}" placeholder="库存量" class="form-control">
+                        <input type="text" name="inventory" value="${param.inventory}" placeholder="小于多少的库存量" class="form-control">
                         <select class="form-control" name="partsType" id="partsType">
                             <option value="">请选择配件类型</option>
 
@@ -46,6 +46,7 @@
                         </select>
                         <button class="btn btn-default">搜索</button>
                     </form>
+                    <button class="btn btn-default" id="clear">清空条件</button>
                 </div>
             </div>
 
@@ -108,6 +109,12 @@
 <%@ include file="../include/js.jsp" %>
 <script>
     $(function(){
+
+        $("#clear").click(function(){
+            window.location.href = "/parts";
+            //$("#find").form("clear");
+        })
+
         var message = "${message}";
         if (message){
             layer.msg(message);
@@ -131,7 +138,7 @@
             next:'下一页',
             //从哪来回哪去,不用写路径.
             // 在下一页 回显 筛选条件 后面或前面跟数据   注意空格(有影响)
-            href:"?p={{number}}&partsName=" + encodeURIComponent('${param.partsName}') + "&partsType=${param.partsType}"
+            href:"?p={{number}}&partsName=" + encodeURIComponent('${param.partsName}') + "&partsType=${param.partsType}&inventory=${param.inventory}"
         });
 
         var locale = {

@@ -164,4 +164,20 @@ public class PartsServiceImpl implements PartsService {
         partsMapper.updateByPrimaryKeySelective(parts);
         logger.debug("更新配件:{}", parts);
     }
+
+    /**
+     * 根据配件编号查找对象parts
+     *
+     * @param partsNo
+     * @return
+     */
+    @Override
+    public List<Parts> findPartsByPartsNo(String partsNo) {
+        PartsExample partsExample = new PartsExample();
+        partsExample.createCriteria().andPartsNoEqualTo(partsNo);
+        //Parts parts = (Parts) partsMapper.selectByExample(partsExample);
+        List<Parts> partsList = partsMapper.selectByExample(partsExample);
+
+        return partsList;
+    }
 }

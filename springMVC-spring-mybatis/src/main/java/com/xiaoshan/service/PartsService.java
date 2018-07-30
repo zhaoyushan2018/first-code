@@ -71,4 +71,22 @@ public interface PartsService {
      * @param parts
      */
     void editParts(Parts parts);
+
+
+    /**
+     * 根据配件编号查找对象parts
+     * @param partsNo
+     * @return
+     */
+    List<Parts> findPartsByPartsNo(String partsNo);
+
+
+
+
+
+
+
+
+
+
 }

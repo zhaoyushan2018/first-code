@@ -97,9 +97,65 @@
             $("#addForm").submit();
         })
 
-        /*$("#addForm").validate({
+        $("#addForm").validate({
+            errorElement:'span',
+            errorClass:'text-danger',
+            rules:{
+                partsNo:{
+                    required:true,
+                    remote:"/parts/checkPartsNo"
+                   /* remote:{
+                        type:'post',
+                        url:'/parts/checkPartsNo',
+                       /!* data:{
 
-        })*/
+                        }*!/
+                    }*/
+                },
+                partsName:{
+                    required:true
+                },
+                inPrice:{
+                    required:true
+                },
+                salePrice:{
+                    required:true
+                },
+                inventory:{
+                    required:true
+                },
+                typeId:{
+                    required:true
+                },
+                address:{
+                    required:true
+                }
+            },
+            messages:{
+                partsNo:{
+                    required:"请输入配件编号",
+                    remote:"该编号已存在,请验证后重新输入..."
+                },
+                partsName:{
+                    required:"请输入配件名称"
+                },
+                inPrice:{
+                    required:"请输入进价"
+                },
+                salePrice:{
+                    required:"请输入售价"
+                },
+                inventory:{
+                    required:"请输入入库数量"
+                },
+                typeId:{
+                    required:"请选择类型"
+                },
+                address:{
+                    required:"请输入产地"
+                }
+            }
+        })
 
     })
 </script>
