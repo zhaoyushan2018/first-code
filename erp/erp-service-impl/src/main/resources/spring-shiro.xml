@@ -3,10 +3,24 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
+    <!-- 配置cookie的设置 -->
+    <bean id="rememberMeCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
+        <property name="maxAge" value="604800"/>
+        <property name="httpOnly" value="true"/>
+        <property name="name" value="rememberMe"/>
+    </bean>
+
+    <!-- 配置记住我管理器 -->
+    <bean id="rememberMeManager" class="org.apache.shiro.web.mgt.CookieRememberMeManager">
+        <property name="cookie" ref="rememberMeCookie"/>
+        <property name="cipherKey" value="#{T(org.apache.shiro.codec.Base64).decode('4AvVhmFLUs0KTA3Kprsdag==')}"/>
+    </bean>
+
     <!-- 1.配置安全管理器 -->
     <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
         <property name="cacheManager" ref="cacheManager"/>
         <property name="realm" ref="myRealm"/>
+        <property name="rememberMeManager" ref="rememberMeManager"/>
     </bean>
 
     <!-- 2.配置缓存管理器 -->
@@ -22,12 +36,7 @@
     <!-- 配置生命周期管理器 -->
     <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
 
-    <!-- 配置基于注解的shiro -->
-    <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"
-          depends-on="lifecycleBeanPostProcessor"/>
-    <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
-        <property name="securityManager" ref="securityManager"/>
-    </bean>
+
 
     <!-- 配置shiroFilter过滤器 -->
     <!-- id属性必须和web.xml中的filter的filter-name节点保持一致 -->
@@ -46,13 +55,15 @@
                 <!--
                     匿名 anno (都可以进)
                     认证 authc (需要认证,[才能登录])
+                           user (不管是登录认证, 还是记住我, 都可以直接访问)
                     - 前面是要访问的路径 =  (右边是)认证还是直接可以访问 -
                     /logout = logout 自带退出,不带提醒
                 -->
                 /favicon.ico = anon
                 /static/** = anon
                 /logout = anon
-                /** = authc
+                <!--/manage/employee/new = perms[employee:add]-->
+                /** = user
             </value>
         </property>
     </bean>

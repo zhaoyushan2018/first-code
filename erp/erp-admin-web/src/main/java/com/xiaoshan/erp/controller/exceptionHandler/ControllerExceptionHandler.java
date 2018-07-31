@@ -1,5 +1,6 @@
 package com.xiaoshan.erp.controller.exceptionHandler;
 
+import org.apache.shiro.authz.AuthorizationException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -18,5 +19,9 @@ public class ControllerExceptionHandler extends RuntimeException {
         return "error/500";
     }
 
+    @ExceptionHandler(AuthorizationException.class)
+    public String AuthorizationException(){
+        return "error/401";
+    }
 
 }

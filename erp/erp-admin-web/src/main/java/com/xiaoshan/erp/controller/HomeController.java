@@ -6,6 +6,8 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.subject.Subject;
+import org.apache.shiro.web.util.SavedRequest;
+import org.apache.shiro.web.util.WebUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,6 +36,23 @@ public class HomeController {
 
     @GetMapping("/")
      public String login(){
+        //创建subject主体对象
+        Subject subject = SecurityUtils.getSubject();
+
+        //判断当前是否已经通过认证, 如果通过则退出登录
+        if(subject.isAuthenticated()){
+            subject.logout();
+        }
+
+        //判断当前登录状态,如果是已记住我,则直接跳转首页,跳过登录
+        if(subject.isRemembered()){
+            return "home";
+        }
+
+        //System.out.println(subject.isAuthenticated()); //是否认证(登录) (这两个只会有一个为true)
+        //System.out.println(subject.isRemembered());   //是否记住
+
+
         return "login";
      }
 
@@ -57,11 +76,20 @@ public class HomeController {
         //获得登录ip
         String loginIp = request.getRemoteAddr();
         //通过userTel.password封装UsernamePasswordToken对象进行登录
-        UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(loginTel, DigestUtils.md5Hex(loginPassword + Constant.DEFAULT_SALT), loginIp);
+        UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(loginTel, DigestUtils.md5Hex(loginPassword + Constant.DEFAULT_SALT), remember != null, loginIp);
 
         try {
             subject.login(usernamePasswordToken);
-            return "redirect:/home";
+
+            //判断跳转路径
+            SavedRequest savedRequest = WebUtils.getSavedRequest(request);
+            String url = "/home";
+            if(savedRequest != null){
+                //获得callback的url
+                url = savedRequest.getRequestUrl();
+            }
+
+            return "redirect:" + url;
 
         } catch (UnknownAccountException |IncorrectCredentialsException e) {
             redirectAttributes.addFlashAttribute("message", "用户名或者密码错误...");

@@ -7,6 +7,7 @@ import com.xiaoshan.erp.exception.ServiceException;
 import com.xiaoshan.erp.service.EmployeeService;
 import com.xiaoshan.erp.service.RolePermissionService;
 import com.xiaoshan.erp.service.RoleService;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -50,6 +51,7 @@ public class EmployeeController {
     }
 
     @GetMapping("/new")
+    @RequiresPermissions("employee:add")
     public String newEmployee(Model model){
         List<Role> roleList = roleService.findAllRoleList();
         model.addAttribute("roleList", roleList);
@@ -58,6 +60,7 @@ public class EmployeeController {
     }
 
     @PostMapping("/new")
+    @RequiresPermissions("employee:add")
     public String newEmployee(Employee employee, Integer[] roleIds){
         //保存员工(employee)对象 并保存员工和角色关联关系
         employeeService.saveEmployee(employee, roleIds);

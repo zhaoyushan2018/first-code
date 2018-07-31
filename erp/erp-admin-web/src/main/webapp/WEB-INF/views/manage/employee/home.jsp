@@ -52,9 +52,13 @@
             <div class="box">
                 <div class="box-header">
                     <div class="box-tools">
-                        <a href="/manage/employee/new" class="btn btn-primary btn-sm">
-                            <i class="fa fa-plus"></i> 新增账号
-                        </a>
+
+                        <shiro:hasPermission name="employee:add">
+                            <a href="/manage/employee/new" class="btn btn-primary btn-sm">
+                                <i class="fa fa-plus"></i> 新增账号
+                            </a>
+                        </shiro:hasPermission>
+
                     </div>
                 </div>
                 <div class="box-body">
