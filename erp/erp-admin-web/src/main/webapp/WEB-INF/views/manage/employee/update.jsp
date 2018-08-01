@@ -36,6 +36,9 @@
             <div class="box">
                 <div class="box-header">
                     <h3 class="box-title">修改账号</h3>
+                    <div class="box-tools">
+                        <a href="/manage/employee" class="btn btn-primary btn-sm">返回角色列表</a>
+                    </div>
                 </div>
                 <div class="box-body">
                     <form method="post" class="saveForm">
@@ -67,7 +70,7 @@
                     </form>
                 </div>
                 <div class="box-footer">
-                    <button class="btn btn-primary pull-right" id="saveBtn">保存</button>
+                    <button class="btn btn-primary pull-right" id="saveBtn">保存修改</button>
                 </div>
             </div>
         </section>
@@ -83,6 +86,36 @@
         $("#saveBtn").click(function () {
             $(".saveForm").submit();
         });
+
+        $(".saveForm").validate({
+            errorElement:'span',
+            errorClass:'text-danger',
+            rules:{
+                employeeName:{
+                    required:true
+                },
+                employeeTel:{
+                    required:true,
+                    remote:'/manage/employee/${employee.id}/check/updateEmployeeTel'
+                },
+                roleIds:{
+                    required:true
+                }
+            },
+            messages:{
+                employeeName:{
+                    required:"请输入员工名字..."
+                },
+                employeeTel:{
+                    required:"请输入可用于登录的手机号码...",
+                    remote:"该手机号码已经存在,请检查无误后,重新输入..."
+                },
+                roleIds:{
+                    required:"请至少选择一个员工职位哦..."
+                }
+            }
+        })
+
     });
 </script>
 </body>

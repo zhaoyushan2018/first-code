@@ -188,6 +188,51 @@
         LEFT JOIN role r on er.role_id = r.id
     </select>
 
+
+    <select id="fingAllEmployeeListLiftRoleByParam" resultMap="employeeAndRole">
+      SELECT
+      employee.*, role.id AS roleId,
+      role.role_code,
+      role.role_name,
+      role.create_time AS roleCreateTime,
+      role.update_time AS roleUpdateTime
+      FROM
+      employee
+      LEFT JOIN employee_role ON employee.id = employee_role.employee_id
+      LEFT JOIN role ON role.id = employee_role.role_id
+      <choose>
+        <when test="roleId != null and roleId != 0">
+          inner JOIN (
+          SELECT
+          employee.id
+          FROM
+          employee
+          INNER JOIN employee_role ON employee_role.employee_id = employee.id
+          <where>
+            employee_role.role_id = #{roleId}
+            <if test="nameMobile != null and nameMobile != ''">
+              and( (employee.employee_name like concat('%',#{nameMobile},'%'))
+              or
+              (employee.employee_tel like concat('%',#{nameMobile},'%')))
+            </if>
+          </where>
+          ) AS temp ON employee.id = temp.id
+        </when>
+        <otherwise>
+          <where>
+            <if test="nameMobile != null and nameMobile != ''">
+              (employee.employee_name like concat('%',#{nameMobile},'%'))
+              or
+              (employee.employee_tel like concat('%',#{nameMobile},'%'))
+            </if>
+          </where>
+        </otherwise>
+      </choose>
+      order by employee.id asc
+    </select>
+    <!-- desc:降序  asc:升序 -->
+
+
     <update id="updateByExampleSelective" parameterType="map">
     update employee
     <set>

@@ -8,6 +8,7 @@
 
     <bean id="studentService" class="com.xiaoshan.service.StudentService" autowire="byType"/>
     <bean id="studentDao" class="com.xiaoshan.dao.StudentDao"/>
+    <bean id="springStudentFactory" class="com.xiaoshan.factory.SpringStudentFactory"/>
 
     <!--   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -   -->
 

@@ -37,6 +37,17 @@
     <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
 
 
+    <bean id="filterChainDefinitionMap" class="com.xiaoshan.erp.shiro.CustomerFilterChainDefinition">
+        <property name="filterChainDefinitioins">
+            <value>
+                /favicon.ico = anon
+                /static/** = anon
+                /logout = logout
+            </value>
+        </property>
+    </bean>
+
+
 
     <!-- 配置shiroFilter过滤器 -->
     <!-- id属性必须和web.xml中的filter的filter-name节点保持一致 -->
@@ -49,23 +60,25 @@
         <property name="successUrl" value="/home"/>
         <!-- 访问没有权限的资源跳转的URL -->
         <property name="unauthorizedUrl" value="/401"/>
+
+        <property name="filterChainDefinitionMap" ref="filterChainDefinitionMap"/>
         <!-- 规则 -->
-        <property name="filterChainDefinitions">
+        <!--<property name="filterChainDefinitions">
             <value>
-                <!--
+                &lt;!&ndash;
                     匿名 anno (都可以进)
                     认证 authc (需要认证,[才能登录])
                            user (不管是登录认证, 还是记住我, 都可以直接访问)
                     - 前面是要访问的路径 =  (右边是)认证还是直接可以访问 -
                     /logout = logout 自带退出,不带提醒
-                -->
+                &ndash;&gt;
                 /favicon.ico = anon
                 /static/** = anon
                 /logout = anon
-                <!--/manage/employee/new = perms[employee:add]-->
+                #/manage/employee/new = perms[employee:add]
                 /** = user
             </value>
-        </property>
+        </property>-->
     </bean>
 
 

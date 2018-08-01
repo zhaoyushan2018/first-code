@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author YushanZhao
@@ -118,6 +119,9 @@ public class EmployeeServiceimpl implements EmployeeService {
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
     public void saveEmployee(Employee employee, Integer[] roleIds) {
+        //密码加密
+        employee.setPassword(DigestUtils.md5Hex(employee.getPassword() + Constant.DEFAULT_SALT));
+
         //保存员工对象
         employeeMapper.insertSelective(employee);
 
@@ -162,11 +166,17 @@ public class EmployeeServiceimpl implements EmployeeService {
      */
     @Override
     public void delEmployeeById(Integer id) throws ServiceException{
+        //根据id查找对应对象
         Employee employee = employeeMapper.selectByPrimaryKey(id);
         if(employee == null){
             throw new ServiceException("参数异常,请稍后重试...");
         }
+        //1.先删除(员工和角色的)对象关系
+        EmployeeRoleExample employeeRoleExample = new EmployeeRoleExample();
+        employeeRoleExample.createCriteria().andEmployeeIdEqualTo(id);
+        employeeRoleMapper.deleteByExample(employeeRoleExample);
 
+        //2.删除对象
         employeeMapper.deleteByPrimaryKey(id);
     }
 
@@ -204,6 +214,96 @@ public class EmployeeServiceimpl implements EmployeeService {
             return employee;
         }
         return null;
+    }
+
+    /**
+     * 移除禁用状态(把员工状态变为可用)
+     *
+     * @param id 员工id
+     */
+    @Override
+    public void removeStateEmployeeById(Integer id) throws ServiceException{
+        //先根据id查找对应对象
+        Employee employee = employeeMapper.selectByPrimaryKey(id);
+
+        //如果对象是null,则表示参数不对
+        if(employee == null){
+            throw new ServiceException("参数异常,请稍后重试...");
+        }
+        //如果该对象状态已正常,则无需解除禁用
+        if(employee.getState().equals(Employee.EMPLOYEE_STATE_NORMAL)){
+            throw new ServiceException("该员工状态正常,无需解除禁用...");
+        }
+
+        //把employeeState修改为1(1为正常), 并保存
+        employee.setState(Employee.EMPLOYEE_STATE_NORMAL);
+        employeeMapper.updateByPrimaryKeySelective(employee);
+    }
+
+    /**
+     * 验证电话号码 是否存在(除自己以外) 根据电话号码 和id
+     *
+     * @param id          当前对象id
+     * @param employeeTel 需要验证的电话号码
+     * @return 已存在 false   可以用true
+     */
+    @Override
+    public Boolean checkUpdateEmployeeTel(Integer id, String employeeTel) {
+
+        //根据电话号码查找对象, 因为电话号码是唯一的 所以最多查出来一个
+        EmployeeExample employeeExample = new EmployeeExample();
+        employeeExample.createCriteria().andEmployeeTelEqualTo(employeeTel);
+        List<Employee> employeeList = employeeMapper.selectByExample(employeeExample);
+
+        if(employeeList != null && employeeList.size() > 0){
+            if(employeeList.get(0).getId().equals(id)){
+                return true;
+            }
+
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * 修改员工属性
+     *
+     * @param employee 员工对象
+     * @param roleIds  角色id 数组
+     */
+    @Override
+    public void saveUpdateEmployee(Employee employee, Integer[] roleIds) {
+        //先删除 员工角色对应关系
+        EmployeeRoleExample employeeRoleExample = new EmployeeRoleExample();
+        employeeRoleExample.createCriteria().andEmployeeIdEqualTo(employee.getId());
+        employeeRoleMapper.deleteByExample(employeeRoleExample);
+
+        //根据角色id数组 新增员工角色对应关系
+        for(Integer roleId : roleIds){
+            EmployeeRole employeeRole = new EmployeeRole();
+            employeeRole.setEmployeeId(employee.getId());
+            employeeRole.setRoleId(roleId);
+
+            employeeRoleMapper.insertSelective(employeeRole);
+        }
+
+        //更新员工对象到数据库
+        //employeeMapper.insertSelective(employee);
+        employeeMapper.updateByPrimaryKeySelective(employee);
+    }
+
+    /**
+     * 根据参数 查找对应的员工集合(每个员工对应的角色)
+     *
+     * @param requestParam 参数
+     * @return 员工集合
+     */
+    @Override
+    public List<Employee> fingAllEmployeeListLiftRoleByParam(Map<String, Object> requestParam) {
+        List<Employee> employeeList = employeeMapper.fingAllEmployeeListLiftRoleByParam(requestParam);
+
+        return employeeList;
     }
 
 

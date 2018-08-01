@@ -1,5 +1,6 @@
 package com.xiaoshan.erp.controller;
 
+import com.google.common.collect.Lists;
 import com.xiaoshan.erp.controller.exceptionHandler.NotFoundException;
 import com.xiaoshan.erp.dto.ResponseBean;
 import com.xiaoshan.erp.entity.Permission;
@@ -59,17 +60,19 @@ public class PermissionController {
     }
 
 
-    @GetMapping("/{id:\\d+}/update")
+    /*@GetMapping("/{id:\\d+}/update")
     public String permissionUpdate(@PathVariable Integer id, Model model){
         try {
             //封装当前对象
             Permission permission = rolePermissionService.findPermissionById(id);
             model.addAttribute("permission", permission);
-            //获取当前权限的所有子权限
+
+            //获取当前权限的所有子权限(菜单)
             List<Permission> sonPermissionList = rolePermissionService.findAllPermissionSon(permission);
 
-            //封装所有权限列表
+            //封装所有权限列表(菜单)
             List<Permission> menuPermissionList = rolePermissionService.findPermissionByType(Permission.PERMISSION_TYPE_MENU);
+
             //排除当前权限和当前权限的子权限
             //移除当前对象的子权限
            if(sonPermissionList != null && sonPermissionList.size() > 0){
@@ -90,11 +93,47 @@ public class PermissionController {
             throw new NotFoundException();
         }
 
+        return "manage/permission/update";
+    }*/
+    @GetMapping("/{id:\\d+}/update")
+    public String permissionUpdate(@PathVariable Integer id, Model model){
+        //封装当前对象
+        Permission permission = rolePermissionService.findPermissionById(id);
+        if(permission == null){
+            throw new NotFoundException();
+        }
 
+        //封装所有权限列表(菜单)
+        List<Permission> menuPermissionList = rolePermissionService.findPermissionByType(Permission.PERMISSION_TYPE_MENU);
+        //排除当前permission对象及其子权限对象
+        remove(menuPermissionList, permission);
 
-
+        model.addAttribute("menuPermissionList", menuPermissionList);
+        model.addAttribute("permission", permission);
         return "manage/permission/update";
     }
+
+
+    /**
+     * 递归去除所有子权限
+     * @param menuPermissionList 源List(全部权限菜单集合)
+     * @param permission 要去除的权限对象
+     */
+    public void remove(List<Permission> menuPermissionList, Permission permission){
+        //通过临时变量来存储所有的list元素防止漏删
+        List<Permission> temp = Lists.newArrayList(menuPermissionList);
+
+        for(int i = 0; i < temp.size(); i++){
+            //判断有没有子权限要去除
+            if(temp.get(i).getPid().equals(permission.getId())){
+                remove(menuPermissionList,temp.get(i));
+            }
+        }
+
+        //去除当前权限
+        menuPermissionList.remove(permission);
+    }
+
 
     @PostMapping("/{id:\\d+}/update")
     public String permissionUpdate(@PathVariable Integer id, Permission permission,Model model,RedirectAttributes redirectAttributes){
@@ -137,6 +176,17 @@ public class PermissionController {
     @ResponseBody
     public boolean checkPermissionNameUpdate(@PathVariable Integer id ,String permissionName){
         boolean result = rolePermissionService.findPermissionByNameAndOwn(id ,permissionName);
+
+        return result;
+    }
+
+    @GetMapping("/{id:\\d+}/check/permissionType")
+    @ResponseBody
+    public boolean checkPermissionType(@PathVariable Integer id,String permissionType){
+        System.out.println("需要验证的permissionType: " + permissionType);
+        System.out.println("需要验证的permissionId: " + id);
+
+        boolean result = rolePermissionService.checkPermissionType(id, permissionType);
 
         return result;
     }

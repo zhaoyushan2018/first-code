@@ -66,14 +66,14 @@
                         </div>
                         <div class="form-group">
                             <label>父权限</label>
-                            <input type="text" name="pid" value="${permission.pid}" class="form-control">
+                            <%--<input type="text" name="pid" value="${permission.pid}" class="form-control">--%>
 
-                            <%--<select name="pid" class="form-control">
+                            <select name="pid" class="form-control">
                                 <option value="0">顶级菜单</option>
-                                <c:forEach items="${menuPermissionList}" var="allPermission">
-                                    <option value="${allPermission.id}" ${permission.id == allPermission.id ? 'selected' : ''}>${allPermission.permissionName}</option>
+                                <c:forEach items="${menuPermissionList}" var="menuPermission">
+                                    <option value="${menuPermission.id}" ${permission.pid == menuPermission.id ? 'selected' : ''}>${menuPermission.permissionName}</option>
                                 </c:forEach>
-                            </select>--%>
+                            </select>
 
                         </div>
                     </form>
@@ -113,6 +113,13 @@
                 },
                 url:{
                     required:true
+                },
+                permissionType:{
+                    required:true,
+                    remote:"/manage/permission/${permission.id}/check/permissionType"
+                },
+                pid:{
+                    required:true
                 }
             },
             messages:{
@@ -126,6 +133,13 @@
                 },
                 url:{
                     required:"请输入资源URL..."
+                },
+                permissionType:{
+                    required:"请选择权限类型...",
+                    remote:"该权限下面有子权限,不能修改为按钮..."
+                },
+                pid:{
+                    required:"请选择父权限"
                 }
             }
         })

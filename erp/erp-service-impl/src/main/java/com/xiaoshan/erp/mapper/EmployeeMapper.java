@@ -3,6 +3,8 @@ package com.xiaoshan.erp.mapper;
 import com.xiaoshan.erp.entity.Employee;
 import com.xiaoshan.erp.entity.EmployeeExample;
 import java.util.List;
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Param;
 
 public interface EmployeeMapper {
@@ -29,4 +31,6 @@ public interface EmployeeMapper {
     int updateByPrimaryKey(Employee record);
 
     List<Employee> findAllEmployeeLeftRole();
+
+    List<Employee> fingAllEmployeeListLiftRoleByParam(Map<String,Object> requestParam);
 }

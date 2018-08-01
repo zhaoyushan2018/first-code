@@ -1,5 +1,6 @@
 package com.xiaoshan.erp.controller;
 
+import com.google.common.collect.Maps;
 import com.xiaoshan.erp.dto.ResponseBean;
 import com.xiaoshan.erp.entity.Employee;
 import com.xiaoshan.erp.entity.Role;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author YushanZhao
@@ -34,24 +36,33 @@ public class EmployeeController {
     private RoleService roleService;
 
     @GetMapping
-    public String employeeHome(Model model){
-        List<Employee> employeeList = employeeService.findAllEmployee();
-        if(employeeList != null && employeeList.size() > 0){
-            for(Employee employee : employeeList){
-                System.out.println("employee: " + employee);
-            }
-        } else {
-            System.out.println("-------------------------------------------------------------------------------------");
-        }
+    public String employeeHome(Model model,
+                               @RequestParam(required = false) String nameMobile,
+                               @RequestParam(required = false) Integer roleId){
+        System.out.println("搜索的条件为nameMobile: " + nameMobile);
+        System.out.println("搜索的条件为roleId: " + roleId);
 
+
+        //所有员工列表
+        //List<Employee> employeeList = employeeService.findAllEmployee();
+
+        Map<String, Object> requestParam = Maps.newHashMap();
+        requestParam.put("nameMobile", nameMobile);
+        requestParam.put("roleId", roleId);
+        List<Employee> employeeList = employeeService.fingAllEmployeeListLiftRoleByParam(requestParam);
+
+
+       //所有角色(职位)列表
+        List<Role> roleList = rolePermissionService.findAllRoleList();
 
         model.addAttribute("employeeList", employeeList);
+        model.addAttribute("roleList", roleList);
 
         return "manage/employee/home";
     }
 
     @GetMapping("/new")
-    @RequiresPermissions("employee:add")
+    //@RequiresPermissions("employee:add")
     public String newEmployee(Model model){
         List<Role> roleList = roleService.findAllRoleList();
         model.addAttribute("roleList", roleList);
@@ -60,7 +71,7 @@ public class EmployeeController {
     }
 
     @PostMapping("/new")
-    @RequiresPermissions("employee:add")
+    //@RequiresPermissions("employee:add")
     public String newEmployee(Employee employee, Integer[] roleIds){
         //保存员工(employee)对象 并保存员工和角色关联关系
         employeeService.saveEmployee(employee, roleIds);
@@ -96,14 +107,29 @@ public class EmployeeController {
 
     }
 
+    @GetMapping("/{id:\\d+}/removeEmployee")
+    @ResponseBody
+    public ResponseBean removeEmployee(@PathVariable Integer id){
+        System.out.println("要解除禁用的id为： " + id);
 
-    @GetMapping("/{id:\\d}/delEmployee")
+        try {
+            employeeService.removeStateEmployeeById(id);
+            return ResponseBean.success();
+
+        } catch (ServiceException e) {
+            return ResponseBean.error(e.getMessage());
+        }
+    }
+
+
+    @GetMapping("/{id:\\d+}/delEmployee")
     @ResponseBody
     public ResponseBean delEmployee(@PathVariable Integer id){
         System.out.println("要删除的id为: " + id + "---------------------------");
 
         try {
             employeeService.delEmployeeById(id);
+
         }catch (ServiceException e){
             return ResponseBean.error(e.getMessage());
         }
@@ -132,7 +158,25 @@ public class EmployeeController {
             return "redirect:/manage/employee";
         }
 
+    }
 
+
+    @PostMapping("/{id:\\d+}/updateEmployee")
+    public String updateEmployee(Employee employee, Integer[] roleIds){
+        employeeService.saveUpdateEmployee(employee, roleIds);
+
+        return "redirect:/manage/employee";
+    }
+
+    @GetMapping("/{id:\\d+}/check/updateEmployeeTel")
+    @ResponseBody
+    public boolean checkUpdateEmployeeTel(@PathVariable Integer id, String employeeTel){
+        System.out.println("要修改的id为: " + id);
+        System.out.println("要电话号码为: " + employeeTel);
+
+        Boolean result = employeeService.checkUpdateEmployeeTel(id, employeeTel);
+
+        return  result;
     }
 
 }

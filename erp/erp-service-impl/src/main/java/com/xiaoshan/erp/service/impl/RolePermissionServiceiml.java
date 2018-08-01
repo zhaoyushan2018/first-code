@@ -410,10 +410,10 @@ public class RolePermissionServiceiml implements RolePermissionService {
     }
 
     /**
-     * 获取当前权限的所有子权限
+     * 获取当前权限的所有子权限(菜单)
      *
      * @param permission 当前权限
-     * @return 当前权限的所有子权限的列表
+     * @return 当前权限的所有子权限的列表(菜单)
      */
     @Override
     public List<Permission> findAllPermissionSon(Permission permission) {
@@ -436,6 +436,58 @@ public class RolePermissionServiceiml implements RolePermissionService {
         List<Role> nowRoleList = roleMapper.findRoleListByEmployeeId(id);
 
         return nowRoleList;
+    }
+
+    /**
+     * 根据角色id获得当前角色的全部权限集合
+     * 根据roleId 获得List<Permission>
+     *
+     * @param roleId 角色id
+     * @return 该角色的全部权限集合
+     */
+    @Override
+    public List<Permission> findAllPermissionListByRoleId(Integer roleId) {
+        List<Permission> permissionList = permissionMapper.findAllPermissionListByRoleId(roleId);
+
+        return permissionList;
+    }
+
+    /**
+     * 查找所有角色(职位)列表
+     *
+     * @return 角色集合List<Role>
+     */
+    @Override
+    public List<Role> findAllRoleList() {
+        RoleExample roleExample = new RoleExample();
+        List<Role> roleList = roleMapper.selectByExample(roleExample);
+
+        return roleList;
+    }
+
+    /**
+     * 验证权限类型 根据权限id (如果该权限下面有子权限则不能修改为按钮,只能为菜单)
+     *
+     * @param permissionId   权限Id
+     * @param permissionType 权限类型()
+     * @return
+     */
+    @Override
+    public boolean checkPermissionType(Integer permissionId, String permissionType) {
+        //根据权限id查找 该权限是否是父权限 如果是父权限 则权限类型只能为菜单
+        //把权限id作为父权限查找
+        PermissionExample permissionExample = new PermissionExample();
+        permissionExample.createCriteria().andPidEqualTo(permissionId);
+        List<Permission> permissionList = permissionMapper.selectByExample(permissionExample);
+        if(permissionList != null && permissionList.size() > 0){
+            if(permissionType.equals(Permission.PERMISSION_TYPE_MENU)){
+                return true;
+            }
+        } else {
+            return true;
+        }
+
+        return false;
     }
 
 

@@ -134,9 +134,9 @@ public interface RolePermissionService {
     void delRoleById(Integer id) throws ServiceException;
 
     /**
-     * 获取当前权限的所有子权限
+     * 获取当前权限的所有子权限(菜单)
      * @param permission 当前权限
-     * @return 当前权限的所有子权限的列表
+     * @return 当前权限的所有子权限的列表(菜单)
      */
     List<Permission> findAllPermissionSon(Permission permission);
 
@@ -146,4 +146,26 @@ public interface RolePermissionService {
      * @return List<Role>
      */
     List<Role> findRoleListByEmployeeId(Integer id);
+
+    /**
+     * 根据角色id获得当前角色的全部权限集合
+     * 根据roleId 获得List<Permission>
+     * @param roleId 角色id
+     * @return 该角色的全部权限集合
+     */
+    List<Permission> findAllPermissionListByRoleId(Integer roleId);
+
+    /**
+     * 查找所有角色(职位)列表
+     * @return 角色集合List<Role>
+     */
+    List<Role> findAllRoleList();
+
+    /**
+     * 验证权限类型 根据权限id (如果该权限下面有子权限则不能修改为按钮,只能为菜单)
+     * @param permissionId 权限Id
+     * @param permissionType 权限类型()
+     * @return
+     */
+    boolean checkPermissionType(Integer permissionId, String permissionType);
 }

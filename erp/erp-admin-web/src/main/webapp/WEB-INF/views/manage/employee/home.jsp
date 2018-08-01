@@ -37,15 +37,21 @@
             <div class="box no-border">
                 <div class="box-body">
                     <form class="form-inline">
-                        <input type="text" name="nameMobile" placeholder="账号或手机号码" class="form-control" value="${param.userTel}">
-                        <select name="rolesId" class="form-control">
+                        <input type="text" name="nameMobile" placeholder="账号或手机号码" class="form-control clearNameMobile" value="${param.nameMobile}">
+                        <%--<select name="rolesId" class="form-control">
                             <option value="">所有账号</option>
                             <c:forEach items="${rolesList}" var="roles">
                                 <option value="${roles.id}" ${param.roleId == role.id ? 'selected' : ''}>${roles.roleName}</option>
                             </c:forEach>
+                        </select>--%>
+                        <select name="roleId" class="form-control clearRole">
+                            <option value="">所有职位</option>
+                            <c:forEach items="${roleList}" var="role">
+                                <option value="${role.id}" ${param.roleId == role.id ? 'selected' : ''}>${role.roleName}</option>
+                            </c:forEach>
                         </select>
-                        <button class="btn btn-default">搜索</button>
-
+                        <button class="btn btn-success">搜索</button>
+                        <button class="btn btn-primary clear">清空搜索</button>
                     </form>
                 </div>
             </div>
@@ -53,7 +59,7 @@
                 <div class="box-header">
                     <div class="box-tools">
 
-                        <shiro:hasPermission name="employee:add">
+                        <shiro:hasPermission name="employee:new">
                             <a href="/manage/employee/new" class="btn btn-primary btn-sm">
                                 <i class="fa fa-plus"></i> 新增账号
                             </a>
@@ -90,7 +96,14 @@
                                     <fmt:formatDate value="${employee.createTime}"/>
                                 </td>
                                 <td>
-                                    <a class="btn btn-warning btn-xs stopEmployee" rel="${employee.id}" href="javascript:;" title="禁用"><i class="fa fa-lock"></i></a>
+                                    <c:if test="${employee.state == 1}">
+                                        <a class="btn btn-success btn-xs stopEmployee" rel="${employee.id}" href="javascript:;" title="禁用"><i class="fa fa-unlock"></i></a>
+                                    </c:if>
+                                    
+                                    <c:if test="${employee.state == 0}">
+                                        <a class="btn btn-warning btn-xs removeEmployee" rel="${employee.id}" href="javascript:;" title="解禁"><i class="fa fa-lock"></i></a>
+                                    </c:if>
+
                                     <a class="btn btn-primary btn-xs" href="/manage/employee/${employee.id}/updateEmployee"><i class="fa fa-edit"></i></a>
                                     <a class="btn btn-danger btn-xs delEmployee" rel="${employee.id}" href="javascript:;" title="删除"><i class="fa fa-trash"></i></a>
                                 </td>
@@ -135,6 +148,25 @@
             })
         })
 
+        $(".removeEmployee").click(function(){
+            var id = $(this).attr("rel");
+
+            layer.confirm("确定要解除禁用该员工吗?", function(){
+                $.get("/manage/employee/" + id + "/removeEmployee").done(function(res){
+                    if(res.state == "success"){
+                        layer.msg("解除禁用成功...", {icon:2, time:1000}, function(){
+                            history.go(0);
+                        })
+                    } else {
+                        layer.msg(res.message);
+                    }
+                }).error(function(){
+                    layer.msg("系统异常,请稍后重试...");
+                })
+            })
+        })
+
+
         $(".delEmployee").click(function(){
             var id = $(this).attr("rel");
 
@@ -151,6 +183,15 @@
                     layer.msg("系统异常,请稍后重试...");
                 })
             })
+        })
+
+        $(".clear").click(function(){
+            $(".clearNameMobile").each(function(){
+                $(this).val("");
+            });
+            $(".clearRole").each(function () {
+                $(this).val("");
+            });
         })
 
 

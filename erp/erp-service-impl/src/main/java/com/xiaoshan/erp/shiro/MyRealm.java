@@ -1,18 +1,19 @@
 package com.xiaoshan.erp.shiro;
 
-import com.xiaoshan.erp.entity.Employee;
-import com.xiaoshan.erp.entity.EmployeeLoginLog;
+import com.xiaoshan.erp.entity.*;
 import com.xiaoshan.erp.service.EmployeeLoginLogService;
 import com.xiaoshan.erp.service.EmployeeService;
+import com.xiaoshan.erp.service.RolePermissionService;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
+import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.Date;
+import java.util.*;
 
 /**
  * @author YushanZhao
@@ -21,6 +22,9 @@ import java.util.Date;
 public class MyRealm extends AuthorizingRealm {
 
     Logger logger = LoggerFactory.getLogger(MyRealm.class);
+
+    @Autowired
+    private RolePermissionService rolePermissionService;
 
     @Autowired
     private EmployeeLoginLogService employeeLoginLogService;
@@ -35,7 +39,35 @@ public class MyRealm extends AuthorizingRealm {
      */
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
-        return null;
+        //获取当前登陆的对象
+        Employee employee = (Employee) principalCollection.getPrimaryPrincipal();
+
+        //获取当前登录对象拥有的角色
+        List<Role> roleList = rolePermissionService.findRoleListByEmployeeId(employee.getId());
+        //获取当前对象拥有的权限
+        List<Permission> permissionList = new ArrayList<>();
+        for(Role role : roleList){
+            List<Permission> permissions = rolePermissionService.findAllPermissionListByRoleId(role.getId());
+            permissionList.addAll(permissions);
+        }
+
+        Set<String> roleCodeSet = new HashSet<>();
+        for(Role role : roleList){
+            roleCodeSet.add(role.getRoleCode());
+        }
+
+        Set<String> permissionCodeSet = new HashSet<>();
+        for(Permission per : permissionList){
+            permissionCodeSet.add(per.getPermissionCode());
+        }
+
+        SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
+        //当前用户拥有的角色(code)[角色编号]
+        simpleAuthorizationInfo.setRoles(roleCodeSet);
+        //当前用户拥有的权限(code)[权限编号]
+        simpleAuthorizationInfo.setStringPermissions(permissionCodeSet);
+
+        return simpleAuthorizationInfo;
     }
 
     /**

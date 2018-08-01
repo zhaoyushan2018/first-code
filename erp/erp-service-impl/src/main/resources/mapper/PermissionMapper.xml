@@ -180,7 +180,26 @@
       <include refid="Example_Where_Clause" />
     </if>
   </select>
-  <update id="updateByExampleSelective" parameterType="map">
+
+
+    <select id="findAllPermissionListByRoleId" resultType="com.xiaoshan.erp.entity.Permission">
+        SELECT
+            *
+        FROM
+            permission
+        WHERE
+        id IN (
+            SELECT
+                permission_id
+            FROM
+                role_permission
+            WHERE
+                role_id = #{roleId}
+        )
+    </select>
+
+
+    <update id="updateByExampleSelective" parameterType="map">
     update permission
     <set>
       <if test="record.id != null">

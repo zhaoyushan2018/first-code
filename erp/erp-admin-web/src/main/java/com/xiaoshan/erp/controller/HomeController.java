@@ -150,13 +150,15 @@ public class HomeController {
         session.invalidate();
     }*/
 
-    @GetMapping("/logout")
+
+    //不写登出, 用自带的
+   /* @GetMapping("/logout")
     public String loginout(RedirectAttributes redirectAttributes){
         Subject subject = SecurityUtils.getSubject();
         subject.logout();
         redirectAttributes.addFlashAttribute("message", "已退出，请重新登录...");
 
         return "redirect:/";
-    }
+    }*/
 
 }
