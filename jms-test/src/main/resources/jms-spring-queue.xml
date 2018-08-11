@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- 配置ActiveMQ connectionFactory -->
+    <bean id="activeMQConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+        <property name="brokerURL" value="tcp://localhost:61616"/>
+    </bean>
+
+    <!-- spring配置的连接工厂 -->
+    <bean id="connectionFactory" class="org.springframework.jms.connection.SingleConnectionFactory">
+        <property name="targetConnectionFactory" ref="activeMQConnectionFactory"/>
+    </bean>
+
+    <!-- 配置JMSTemplate -->
+    <bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+        <property name="connectionFactory" ref="connectionFactory"/>
+        <!-- 配置默认的目的地名称 可以省略 在发送时指定 -->
+        <property name="defaultDestinationName" value="oneQueue"/>
+    </bean>
+
+    <!--4.配置消费者的监听器-->
+    <bean id="listener" class="com.xiaoshan.mq.listener.ConsumerQueueListener"/>
+
+    <!--监听器容器-->
+    <bean class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+        <property name="connectionFactory" ref="connectionFactory"/>
+        <!-- 队列 -->
+        <property name="destinationName" value="oneQueue"/>
+        <property name="messageListener" ref="listener"/>
+    </bean>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</beans>
