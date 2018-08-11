@@ -14,13 +14,14 @@ public class Test {
 
     Logger logger = LoggerFactory.getLogger(Test.class);
 
-    @org.junit.Test
+   @org.junit.Test
    public void testPassword(){
       // String salt = "!@#$%^&*()_+";
        String num = "222";
        String password = DigestUtils.md5Hex(num + Constant.DEFAULT_SALT);
        System.out.println(password);
    }
+
 
 
 }

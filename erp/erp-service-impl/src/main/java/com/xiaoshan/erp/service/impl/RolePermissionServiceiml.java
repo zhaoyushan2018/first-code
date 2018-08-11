@@ -380,6 +380,7 @@ public class RolePermissionServiceiml implements RolePermissionService {
      * @throws ServiceException
      */
     @Override
+    @Transactional(rollbackFor = RuntimeException.class)
     public void delRoleById(Integer id) throws ServiceException{
         //查看角色是否被账号(员工)引用,如果引用则不能删除
         EmployeeRoleExample employeeRoleExample = new EmployeeRoleExample();

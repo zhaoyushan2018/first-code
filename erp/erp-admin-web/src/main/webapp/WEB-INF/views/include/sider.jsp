@@ -100,7 +100,7 @@
 
             <li class="treeview">
                 <a href="#">
-                    <i class="fa fa-users"></i> <span>角色管理</span>
+                    <i class="fa fa-user-md"></i> <span>角色管理</span>
                     <span class="pull-right-container">
                 <i class="fa fa-angle-left pull-right"></i>
               </span>
@@ -113,7 +113,7 @@
 
             <li class="treeview">
                 <a href="#">
-                    <i class="fa fa-users"></i> <span>权限管理</span>
+                    <i class="fa fa-cogs"></i> <span>权限管理</span>
                     <span class="pull-right-container">
                 <i class="fa fa-angle-left pull-right"></i>
               </span>

@@ -205,5 +205,38 @@ public class PartsController {
     }
 
 
+    /**
+     *  验证新增配件类型名字是否重复
+     * @param addTypeName 新增配件类型名字
+     * @return
+     */
+    @GetMapping("/check/addTypeName")
+    @ResponseBody
+    public boolean checkAddTypeName(String addTypeName){
+        System.out.println("新增的配件类型为: " + addTypeName);
+        boolean result = partsService.checkAddTypeName(addTypeName);
+        System.out.println("新增配件类型名字是否重复: " + result);
+
+        return result;
+    }
+
+    @PostMapping("/newPartsType")
+    public String newPartsType(String addTypeName, RedirectAttributes redirectAttributes){
+        System.out.println("新增配件类型名字为: " + addTypeName);
+        partsService.savePartsType(addTypeName);
+
+        redirectAttributes.addFlashAttribute("message", "新增配件类型成功......");
+        return "redirect:/parts/partsTypeList";
+    }
+
+
+
+    @PostMapping("/{id:\\d+}/updatePartsType")
+    public String updatePartsType(Integer id, String updateType){
+        System.out.println("要修改的id: " + id);
+        System.out.println("要修改的type: " + updateType);
+
+        return "redirect:/parts";
+    }
 
 }

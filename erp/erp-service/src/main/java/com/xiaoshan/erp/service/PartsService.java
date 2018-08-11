@@ -81,12 +81,43 @@ public interface PartsService {
     List<Parts> findPartsByPartsNo(String partsNo);
 
 
+    /**
+     *  新增配件类型 根据配件类型 验证是否重复
+     * @param addTypeName 配件类型名字
+     * @return 重复false(不可用)  不重复true(可用)
+     */
+    boolean checkAddTypeName(String addTypeName);
 
+    /**
+     * 根据(配件类型名字) 新增配件类型
+     * @param addTypeName 配件类型名字
+     */
+    void savePartsType(String addTypeName);
 
+    /**
+     * 根据配件类型id 查找配件对应的配件类型
+     * @param id 配件类型id
+     * @return 配件类型对象
+     */
+    Type findPartsTypeByPartsTypeId(Integer id);
 
+    /**
+     *  根据配件类型id 查找该类型下的所有配件
+     * @param id 配件类型id
+     * @return 该类型下所有的配件
+     */
+    List<Parts> findAllPartsByPartsTypeId(Integer id);
 
+    /**
+     *  查找该订单的所需配件列表
+     * @param orderId 订单Id
+     * @return
+     */
+    List<Parts> findPartsByOrderPartsOrderId(Integer orderId);
 
-
-
-
+    /**
+     *  根据json数据修改库存
+     * @param json
+     */
+    void updateInventory(String json);
 }

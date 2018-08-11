@@ -165,6 +165,7 @@ public class EmployeeServiceimpl implements EmployeeService {
      * @param id
      */
     @Override
+    @Transactional(rollbackFor = RuntimeException.class)
     public void delEmployeeById(Integer id) throws ServiceException{
         //根据id查找对应对象
         Employee employee = employeeMapper.selectByPrimaryKey(id);
@@ -273,6 +274,7 @@ public class EmployeeServiceimpl implements EmployeeService {
      * @param roleIds  角色id 数组
      */
     @Override
+    @Transactional(rollbackFor = RuntimeException.class)
     public void saveUpdateEmployee(Employee employee, Integer[] roleIds) {
         //先删除 员工角色对应关系
         EmployeeRoleExample employeeRoleExample = new EmployeeRoleExample();

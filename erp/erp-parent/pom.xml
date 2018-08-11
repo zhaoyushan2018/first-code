@@ -13,6 +13,8 @@
         <module>../erp-service</module>
         <module>../erp-service-impl</module>
         <module>../erp-admin-web</module>
+        <module>../erp-front-web</module>
+        <module>../erp-fixup-web</module>
     </modules>
 
     <properties>

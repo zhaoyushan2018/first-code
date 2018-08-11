@@ -216,6 +216,18 @@
       </where>
     </select>
 
+
+    <select id="findPartsListByOrderPartsOrderId" resultType="com.xiaoshan.erp.entity.Parts">
+          SELECT
+          parts.*, order_parts.num
+      FROM
+          order_parts
+      INNER JOIN parts ON order_parts.parts_id = parts.id
+      WHERE
+          order_parts.order_id = #{orderId}
+    </select>
+
+
     <update id="updateByExampleSelective" parameterType="map">
     update parts
     <set>

@@ -33,4 +33,11 @@ public interface PartsMapper {
     int updateByPrimaryKey(Parts record);
 
     List<Parts> findPageByPageNoAndQeryMap(Map<String, Object> queryMap);
+
+    /**
+     *  根据订单Id 查找订单配件及其数量
+     * @param orderId 订单Id
+     * @return
+     */
+    List<Parts> findPartsListByOrderPartsOrderId(Integer orderId);
 }

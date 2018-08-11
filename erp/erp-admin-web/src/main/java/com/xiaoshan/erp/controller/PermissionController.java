@@ -6,6 +6,7 @@ import com.xiaoshan.erp.dto.ResponseBean;
 import com.xiaoshan.erp.entity.Permission;
 import com.xiaoshan.erp.exception.ServiceException;
 import com.xiaoshan.erp.service.RolePermissionService;
+import com.xiaoshan.erp.shiro.CustomerFilterChainDefinition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,6 +27,9 @@ public class PermissionController {
 
     @Autowired
     private RolePermissionService rolePermissionService;
+
+    @Autowired
+    private CustomerFilterChainDefinition customerFilterChainDefinition;
 
     @GetMapping
     public String home(Model model){
@@ -56,6 +60,8 @@ public class PermissionController {
         rolePermissionService.savePermission(permission);
         redirectAttributes.addFlashAttribute("message", "权限保存成功...");
 
+        //刷新权限(新增权限刷新成功)
+        customerFilterChainDefinition.updatePermission();
         return "redirect:/manage/permission";
     }
 
@@ -126,7 +132,9 @@ public class PermissionController {
         for(int i = 0; i < temp.size(); i++){
             //判断有没有子权限要去除
             if(temp.get(i).getPid().equals(permission.getId())){
+                System.out.println("----" + temp.get(i));
                 remove(menuPermissionList,temp.get(i));
+
             }
         }
 
@@ -147,6 +155,8 @@ public class PermissionController {
             return "error/custorm";
         }
 
+        //刷新权限(修改成功)
+        customerFilterChainDefinition.updatePermission();
         return "redirect:/manage/permission";
     }
 
@@ -161,6 +171,8 @@ public class PermissionController {
            return ResponseBean.error(e.getMessage());
         }
 
+        //刷新权限(删除成功)
+        customerFilterChainDefinition.updatePermission();
         return ResponseBean.success();
     }
 

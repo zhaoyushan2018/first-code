@@ -2,11 +2,11 @@ package com.xiaoshan.erp.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.xiaoshan.erp.entity.Parts;
-import com.xiaoshan.erp.entity.PartsExample;
-import com.xiaoshan.erp.entity.Type;
-import com.xiaoshan.erp.entity.TypeExample;
+import com.google.gson.Gson;
+import com.xiaoshan.erp.dto.FixOrderPartsDto;
+import com.xiaoshan.erp.entity.*;
 import com.xiaoshan.erp.mapper.PartsMapper;
+import com.xiaoshan.erp.mapper.PartsStreamMapper;
 import com.xiaoshan.erp.mapper.TypeMapper;
 import com.xiaoshan.erp.service.PartsService;
 import com.xiaoshan.erp.util.Constant;
@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -32,6 +33,9 @@ public class PartsServiceImpl implements PartsService {
 
     @Autowired
     private TypeMapper typeMapper;
+
+    @Autowired
+    private PartsStreamMapper partsStreamMapper;
 
     /**
      * 根据id查找parts对象返回
@@ -180,4 +184,121 @@ public class PartsServiceImpl implements PartsService {
 
         return partsList;
     }
+
+    /**
+     * 新增配件类型 根据配件类型 验证是否重复
+     *
+     * @param addTypeName 配件类型名字
+     * @return 重复false(不可用)  不重复true(可用)
+     */
+    @Override
+    public boolean checkAddTypeName(String addTypeName) {
+        //根据类型名字 到数据库查找对应的全部对象
+        TypeExample typeExample = new TypeExample();
+        typeExample.createCriteria().andTypeNameEqualTo(addTypeName);
+        List<Type> typeList = typeMapper.selectByExample(typeExample);
+
+        if(typeList != null && typeList.size() > 0){
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * 根据(配件类型名字) 新增配件类型
+     *
+     * @param addTypeName 配件类型名字
+     */
+    @Override
+    public void savePartsType(String addTypeName) {
+        Type type = new Type();
+        type.setTypeName(addTypeName);
+        typeMapper.insertSelective(type);
+    }
+
+    /**
+     * 根据配件类型id 查找配件对应的配件类型
+     *
+     * @param id 配件类型id
+     * @return 配件类型对象
+     */
+    @Override
+    public Type findPartsTypeByPartsTypeId(Integer id) {
+        Type type = typeMapper.selectByPrimaryKey(id);
+
+        return type;
+    }
+
+    /**
+     * 根据配件类型id 查找该类型下的所有配件
+     *
+     * @param id 配件类型id
+     * @return 该类型下所有的配件
+     */
+    @Override
+    public List<Parts> findAllPartsByPartsTypeId(Integer id) {
+        PartsExample partsExample = new PartsExample();
+        partsExample.createCriteria().andTypeIdEqualTo(id);
+        List<Parts> partsList = partsMapper.selectByExample(partsExample);
+
+        return partsList;
+    }
+
+    /**
+     * 查找该订单的所需配件列表
+     *
+     * @param orderId 订单Id
+     * @return
+     */
+    @Override
+    public List<Parts> findPartsByOrderPartsOrderId(Integer orderId) {
+        List<Parts> partsList = partsMapper.findPartsListByOrderPartsOrderId(orderId);
+
+        return partsList;
+    }
+
+    /**
+     * 根据json数据修改库存
+     *
+     * @param json
+     */
+    @Override
+    @Transactional(rollbackFor = RuntimeException.class)
+    public void updateInventory(String json) {
+        FixOrderPartsDto fixOrderPartsDto = new Gson().fromJson(json, FixOrderPartsDto.class);
+        for(FixOrderParts fixOrderParts : fixOrderPartsDto.getFixOrderPartsList()){
+            //更新库存
+            Parts parts = partsMapper.selectByPrimaryKey(fixOrderParts.getPartsId());
+            if(parts == null){
+                logger.error("数据传输的配件id:{},参数异常或者配件不存在...", fixOrderParts.getPartsId());
+            }
+            parts.setInventory(parts.getInventory() - fixOrderParts.getPartsNum());
+            partsMapper.updateByPrimaryKeySelective(parts);
+
+            // 生成出库流水  //封装出库流水,并存数据库
+            PartsStream partsStream = new PartsStream();
+            partsStream.setOrderId(fixOrderParts.getOrderId());
+            partsStream.setEmployeeId(fixOrderPartsDto.getEmployeeId());
+            partsStream.setPartsId(fixOrderParts.getPartsId());
+            partsStream.setNum(fixOrderParts.getPartsNum());
+            partsStream.setType(PartsStream.PARTS_STREAM_TYPE_OUT);
+
+            partsStreamMapper.insertSelective(partsStream);
+            logger.info("{} ---> 配件出库", partsStream);
+        }
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
 }
