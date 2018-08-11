@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jms="http://www.springframework.org/schema/jms"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/jms http://www.springframework.org/schema/jms/spring-jms.xsd">
+
+    <!-- 1.设置重试机制 -->
+    <bean id="redeliveryPolicy" class="org.apache.activemq.RedeliveryPolicy">
+        <!-- 重试次数 -->
+        <property name="maximumRedeliveries" value="3"/>
+        <!-- 首次重试的延迟时间 -->
+        <property name="initialRedeliveryDelay" value="6000"/>
+        <!-- 每次重试的延迟时间 -->
+        <property name="redeliveryDelay" value="3000"/>
+    </bean>
+
+    <!-- 创建连接工厂 -->
+    <!-- 2.配置ActiveMQ ConnectionFactory -->
+    <bean id="activeMQConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+        <property name="brokerURL" value="tcp://localhost:61616"/>
+        <property name="redeliveryPolicy" ref="redeliveryPolicy"/>
+    </bean>
+
+    <!-- 3.Spring适配的连接工厂 -->
+    <bean id="connectionFactory" class="org.springframework.jms.connection.SingleConnectionFactory">
+        <property name="targetConnectionFactory" ref="activeMQConnectionFactory"/>
+    </bean>
+
+    <!-- 4.配置jmsTemplate -->
+    <bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+        <property name="connectionFactory" ref="connectionFactory"/>
+        <!-- 配置默认的目的地地址 -->
+        <property name="defaultDestinationName" value="orderQueue"/>
+        <!-- 客户端签收模式 -->
+        <property name="sessionAcknowledgeMode" value="2"/>
+    </bean>
+
+    <!-- 5.配置消费者的监听器 -->
+    <bean id="fixOrderListener" class="com.xiaoshan.erp.mq.FixOrderListener"/>   <!-- 监听下发订单(数据保存维修部门数据库) -->
+    <bean id="orderStateListener" class="com.xiaoshan.erp.mq.OrderStateListener"/>  <!-- 维修员工接受任务 修改状态 -->
+    <bean id="fixOrderPartsNumListener" class="com.xiaoshan.erp.mq.FixOrderPartsNumListener"/>   <!-- 员工接受任务,消耗配件, 更新配件库存 -->
+
+    <!-- 6.配置多个监听器 -->
+    <jms:listener-container acknowledge="client" concurrency="3-10">
+        <jms:listener destination="orderQueue" ref="fixOrderListener"/>
+        <jms:listener destination="stateQueue" ref="orderStateListener"/>
+        <jms:listener destination="fixPartsNumQueue" ref="fixOrderPartsNumListener"/>
+    </jms:listener-container>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</beans>
