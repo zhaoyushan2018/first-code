@@ -4,15 +4,15 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.xiaoshan.dubbo</groupId>
+    <groupId>com.xiaoshan</groupId>
     <artifactId>dubbo-provider</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <dependencies>
 
-        <!-- service实现类 要依赖service -->
+        <!-- 实现类要依赖接口 -->
         <dependency>
-            <groupId>com.xiaoshan.dubbo</groupId>
+            <groupId>com.xiaoshan</groupId>
             <artifactId>dubbo-service</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
@@ -45,7 +45,7 @@
             </exclusions>
         </dependency>
 
-        <!-- zookeeper及客户端 -->
+        <!-- zookeeoer及客户端 -->
         <dependency>
             <groupId>org.apache.zookeeper</groupId>
             <artifactId>zookeeper</artifactId>
@@ -71,6 +71,22 @@
         </dependency>
 
     </dependencies>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     

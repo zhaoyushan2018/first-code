@@ -3,27 +3,13 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
 
-    <!-- 服务名称,自定义 -->
-    <dubbo:application name="UserService"/>
+    <!-- 服务器名称自定义 -->
+    <dubbo:application name="UserServiceConsumer"/>
 
-    <!-- 声明注册中心 -->
+    <!-- 服务器注册中心地址和端口 -->
     <dubbo:registry address="zookeeper://127.0.0.1:2181"/>
 
-    <!-- 服务的bean添加到spring容器 -->
-    <bean id="userService" class="com.xiaoshan.service.impl.UserServiceImpl"/>
-
-    <!-- 暴露服务 -->
-    <dubbo:service interface="com.xiaoshan.service.UserService" ref="userService"/>
-
-
-
-
-
-
-
-
-
-
-
-
+    <!-- 接受服务 -->
+    <dubbo:reference interface="com.xiaoshan.service.UserService" id="UserService"/>
+    
 </beans>
